@@ -47,7 +47,7 @@ SET(ydefx_LINK
 ADD_LIBRARY(ydefx ${ydefx_SOURCES})
 TARGET_LINK_LIBRARIES(ydefx ${ydefx_LINK})
 TARGET_INCLUDE_DIRECTORIES(ydefx PUBLIC
-                          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+                          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/cpp>
                           $<INSTALL_INTERFACE:include>)
 
 INSTALL(TARGETS ydefx DESTINATION lib)

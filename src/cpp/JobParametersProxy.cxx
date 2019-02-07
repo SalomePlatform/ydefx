@@ -137,6 +137,13 @@ void JobParametersProxy::add_in_files(const std::list<std::string>& pathList)
   in_files(newList);
 }
 
+void JobParametersProxy::remove_in_file(const std::string& path)
+{
+  std::list<std::string> newList = in_files();
+  newList.remove(path);
+  in_files(newList);
+}
+
 void JobParametersProxy::in_files(const std::list<std::string>& pathList)
 {
   _pyParameters.getAttr("salome_parameters")
@@ -335,6 +342,16 @@ void JobParametersProxy::createResultDirectory(const std::string& basePath)
   py2cpp::PyFunction pyFn;
   pyFn.loadExp(_pyParameters, "createResultDirectory");
   pyFn(basePath);
+}
+
+std::list<std::string> JobParametersProxy::AvailableResources()
+{
+  std::list<std::string> result;
+  py2cpp::PyFunction pyFn;
+  pyFn.loadExp("pydefx.configuration", "availableResources");
+  py2cpp::pyResult(result) = pyFn();
+
+  return result;
 }
 
 }

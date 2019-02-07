@@ -49,3 +49,8 @@ def defaultWckey(resource="localhost"):
     result = "P11U5:CARBONES"
   return result
 
+def availableResources():
+  resManager = salome.lcc.getResourcesManager()
+  params     = salome.ResourceParameters()
+  params.can_launch_batch_jobs = True
+  return resManager.GetFittingResources(params)

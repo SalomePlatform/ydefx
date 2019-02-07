@@ -36,6 +36,9 @@ void SampleTest::fullStudy()
 {
   Py_Initialize();
   {
+    std::list<std::string> resources = ydefx::JobParametersProxy::AvailableResources();
+    CPPUNIT_ASSERT(resources.size() > 0);
+
     ydefx::JobParametersProxy jobParams;
     jobParams.configureResource("localhost");
     jobParams.createResultDirectory("/tmp");

@@ -22,6 +22,7 @@ ParamsConfigWidget::ParamsConfigWidget(ydefx::JobParametersProxy& model,
                                        QWidget* parent)
 : QScrollArea(parent)
 , _model(model)
+, _extraEdit(nullptr)
 {
   QWidget* mainWidget = new QWidget();
   QVBoxLayout *mainLayout = new QVBoxLayout();

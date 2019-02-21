@@ -28,9 +28,13 @@ class SampleManager:
   def __init__(self):
     pass
 
-  def prepareRun(self, sample, directory):
+  def prepareRun(self, script, sample, directory):
     """
     Create a dump of the sample in the given directory.
+    script: PyScript object.
+    sample: Sample object.
+    directory: path to a local working directory where all the working files are
+               copied. This directory should be already created.
     Return a list of files to add to the input files list of the job.
     """
     datapath = os.path.join(directory, SampleIterator.DATAFILE)
@@ -40,10 +44,10 @@ class SampleManager:
                               quoting=csv.QUOTE_NONNUMERIC )
       writer.writeheader()
       writer.writerows(sample.inputIterator())
-    
+
     outnamespath = os.path.join(directory, SampleIterator.OUTPUTNAMESFILE)
     with open(outnamespath, 'w') as outputfile:
-      for v in sample.getOutputNames():
+      for v in script.getOutputNames():
         outputfile.write(v+'\n')
     filename = inspect.getframeinfo(inspect.currentframe()).filename
     install_directory = pathlib.Path(filename).resolve().parent

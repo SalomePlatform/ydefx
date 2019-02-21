@@ -29,7 +29,7 @@ myParams = myStudy.createDefaultParameters(resource="localhost");
 wd = os.path.join(myParams.salome_parameters.work_directory, "minifixtest")
 myParams.salome_parameters.work_directory = wd
 
-myStudy.createNewJob(myScript.script, mySample, myParams)
+myStudy.createNewJob(myScript, mySample, myParams)
 myStudy.launch()
 
 print(myStudy.getJobState())

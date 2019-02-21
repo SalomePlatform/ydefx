@@ -18,21 +18,10 @@
 //
 #ifndef YDEFX_JOBPARAMETERSPROXY_H
 #define YDEFX_JOBPARAMETERSPROXY_H
-#include <py2cpp/PyPtr.hxx>
 #include <string>
 #include <list>
 #include <map>
-
-namespace ydefx
-{
-class JobParametersProxy;
-}
-namespace py2cpp
-{
-PyObject * toPy(const ydefx::JobParametersProxy& jp);
-}
-
-#include <py2cpp/py2cpp.hxx>
+#include "PyConversions.hxx"
 
 namespace ydefx
 {

@@ -45,7 +45,7 @@ public:
         py2cpp::PyPtr pySample = createPySample(sample);
         py2cpp::PyFunction pyFn;
         pyFn.loadExp(_pyStudy, "createNewJob");
-        pyFn(fnScript.content(), pySample, params);
+        pyFn(fnScript, pySample, params);
       }
       catch(std::exception& e)
       {

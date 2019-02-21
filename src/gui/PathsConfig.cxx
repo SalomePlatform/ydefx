@@ -22,6 +22,9 @@ PathsConfigWidget::PathsConfigWidget(ydefx::JobParametersProxy& model,
                                      QWidget* parent)
 : QScrollArea(parent)
 , _model(model)
+, _localdirEdit(nullptr)
+, _inputFilesList(nullptr)
+, _removeInputFilesButton(nullptr)
 {
   QWidget* mainWidget = new QWidget();
   QVBoxLayout *mainLayout = new QVBoxLayout();

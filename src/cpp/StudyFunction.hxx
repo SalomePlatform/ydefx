@@ -30,11 +30,12 @@ public:
   virtual void loadFile(const std::string& path)=0;
   virtual void loadString(const std::string&)=0;
   virtual void save(const std::string& path)=0;
-  virtual const std::string& content()const=0;
-  virtual const std::list<std::string>& inputNames()const=0;
-  virtual const std::list<std::string>& outputNames()const=0;
-  virtual const std::list<std::string>& errors()const=0;
-  std::list<std::string> datafiles;
+  virtual std::string content()const=0;
+  virtual std::list<std::string> inputNames()const=0;
+  virtual std::list<std::string> outputNames()const=0;
+  virtual std::string errors()const=0;
+  virtual std::list<std::string> datafiles()const=0;
+  virtual bool isValid()const=0;
 };
 }
 #endif // YDEFX_STUDYFUNCTION_H

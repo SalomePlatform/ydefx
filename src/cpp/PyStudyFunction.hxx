@@ -19,6 +19,8 @@
 #ifndef YDEFX_PYSTUDYFUNCTION_H
 #define YDEFX_PYSTUDYFUNCTION_H
 #include "StudyFunction.hxx"
+#include "PyConversions.hxx"
+
 namespace ydefx
 {
 class PyStudyFunction :  StudyFunction
@@ -29,15 +31,15 @@ public:
   virtual void loadFile(const std::string& path);
   virtual void loadString(const std::string&);
   virtual void save(const std::string& path);
-  virtual const std::string& content()const;
-  virtual const std::list<std::string>& inputNames()const;
-  virtual const std::list<std::string>& outputNames()const;
-  virtual const std::list<std::string>& errors()const;
+  virtual std::string content()const;
+  virtual std::list<std::string> inputNames()const;
+  virtual std::list<std::string> outputNames()const;
+  virtual std::string errors()const;
+  virtual bool isValid()const;
+  virtual std::list<std::string> datafiles()const;
+  friend PyObject * py2cpp::toPy(const PyStudyFunction& jp);
 private:
-  std::string _content;
-  std::list<std::string> _input;
-  std::list<std::string> _output;
-  std::list<std::string> _errors;
+  py2cpp::PyPtr _pyObject;
 };
 }
 #endif // YDEFX_PYSTUDYFUNCTION_H

@@ -18,7 +18,7 @@ mydata = {"a":[1.1, 2.2, 3.4, 5.5],
 mySample.setInputValues(mydata)
 
 myStudy = pydefx.PyStudy()
-myStudy.createNewJob(myScript.script, mySample, myParams)
+myStudy.createNewJob(myScript, mySample, myParams)
 print(myStudy.getProgress())
 myStudy.launch()
 print(myStudy.getJobState())

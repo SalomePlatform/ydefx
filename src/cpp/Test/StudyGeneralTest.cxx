@@ -49,7 +49,7 @@ void SampleTest::fullStudy()
 
     ydefx::PyStudyFunction studyFunction;
     studyFunction.loadString(pyScript);
-    CPPUNIT_ASSERT(studyFunction.errors().empty());
+    CPPUNIT_ASSERT(studyFunction.isValid());
     const std::list<std::string>& inputs = studyFunction.inputNames();
     CPPUNIT_ASSERT(std::find(inputs.begin(), inputs.end(), "a")!=inputs.end());
     CPPUNIT_ASSERT(std::find(inputs.begin(), inputs.end(), "b")!=inputs.end());
@@ -58,8 +58,8 @@ void SampleTest::fullStudy()
                                                               != outputs.end());
     
     ydefx::Sample<double> sample;
-    std::vector<double> a_vals = {1.1, 2.2, 3.4, 5.5};
-    std::vector<double> b_vals = {2.2, 4.4, 6.8, 11};
+    std::vector<double> a_vals = {1.1, 4.4, 9, 4};
+    std::vector<double> b_vals = {1.1, 2.2, 3, 1};
     sample.inputs<double>().set("a", a_vals);
     sample.inputs<double>().set("b", b_vals);
     sample.outputs<double>().addName("d");
@@ -87,7 +87,7 @@ void SampleTest::fullStudy()
     ok = myJob->fetch();
     CPPUNIT_ASSERT(ok);
     CPPUNIT_ASSERT(myJob->lastError().empty());
-    std::vector<double> expectedResult = {0.5, 0.5, 0.5, 0.5};
+    std::vector<double> expectedResult = {1,2,3,4};
     const std::vector<double>& result = sample.outputs<double>().get("d");
     CPPUNIT_ASSERT(expectedResult == result);
     delete myJob;

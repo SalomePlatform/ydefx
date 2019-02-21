@@ -16,8 +16,14 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-ADD_DEFINITIONS(${YACS_DEFINITIONS})
-INCLUDE_DIRECTORIES(${YACS_INCLUDE_DIRS})
+
+INCLUDE_DIRECTORIES(
+  ${PYTHON_INCLUDE_DIR}
+)
+
+ADD_DEFINITIONS(
+  ${PYTHON_DEFINITIONS}
+)
 
 SET(ydefx_SOURCES
   PyStudyFunction.cxx
@@ -40,8 +46,8 @@ SET(ydefx_HEADERS
 )
 
 SET(ydefx_LINK
-  py2yacslib
   py2cpp
+  ${PYTHON_LIBRARIES}
 )
 
 ADD_LIBRARY(ydefx ${ydefx_SOURCES})

@@ -19,79 +19,93 @@
 #include "PyStudyFunction.hxx"
 #include <fstream>
 #include <sstream>
-#include <py2yacs.hxx>
+#include <py2cpp/py2cpp.hxx>
+
+PyObject * py2cpp::toPy(const ydefx::PyStudyFunction& studyFn)
+{
+  PyObject * result = studyFn._pyObject.get();
+  Py_IncRef(result);
+  return result;
+}
 
 namespace ydefx
 {
 PyStudyFunction::PyStudyFunction()
-: _content()
-, _input()
-, _output()
-, _errors()
+: _pyObject(nullptr)
 {
-  _errors.push_back("Function \"_exec\" not found!");
+  py2cpp::PyFunction objConstructor;
+  objConstructor.loadExp("pydefx", "PyScript");
+  _pyObject = objConstructor();
 }
 
 PyStudyFunction::~PyStudyFunction(){}
 
 void PyStudyFunction::loadFile(const std::string& path)
 {
-  std::ifstream infile(path.c_str());
-  std::stringstream buffer;
-  buffer << infile.rdbuf();
-  loadString(buffer.str());
+  py2cpp::PyFunction pyFn;
+  pyFn.loadExp(_pyObject, "loadFile");
+  pyFn(path);
 }
 
 void PyStudyFunction::loadString(const std::string& value)
 {
-  _content = value;
-  _input.clear();
-  _output.clear();
-  _errors.clear();
-  // TODO: use py2yacs
-  Py2yacs p2y;
-  p2y.load(value);
-  if(p2y.getGlobalErrors().size() == 0)
-  {
-    const std::list<FunctionProperties>& fn_prop = p2y.getFunctionProperties();
-    std::list<FunctionProperties>::const_iterator prop_it = fn_prop.begin();
-    while(prop_it != fn_prop.end() && prop_it->_name != "_exec")
-      ++ prop_it;
-    if(prop_it != fn_prop.end() && prop_it->_errors.empty())
-    {
-      for(const std::string& name: prop_it->_input_ports)
-        _input.push_back(name);
-      for(const std::string& name: prop_it->_output_ports)
-        _output.push_back(name);
-    }
-  }
-  // TODO: deal with the errors
+  py2cpp::PyFunction pyFn;
+  pyFn.loadExp(_pyObject, "loadString");
+  pyFn(value);
 }
 
 void PyStudyFunction::save(const std::string& path)
 {
-  std::ofstream outfile(path.c_str());
-  outfile << _content;
+  py2cpp::PyFunction pyFn;
+  pyFn.loadExp(_pyObject, "saveFile");
+  pyFn(path);
 }
 
-const std::string& PyStudyFunction::content()const
+std::string PyStudyFunction::content()const
 {
-  return _content;
+  std::string result;
+  py2cpp::PyFunction pyFn;
+  pyFn.loadExp(_pyObject, "content");
+  py2cpp::pyResult(result) = pyFn();
+  return result;
 }
 
-const std::list<std::string>& PyStudyFunction::inputNames()const
+std::list<std::string> PyStudyFunction::inputNames()const
 {
-  return _input;
+  std::list<std::string> result;
+  py2cpp::PyFunction pyFn;
+  pyFn.loadExp(_pyObject, "getInputNames");
+  py2cpp::pyResult(result) = pyFn();
+  return result;
 }
 
-const std::list<std::string>& PyStudyFunction::outputNames()const
+std::list<std::string> PyStudyFunction::outputNames()const
 {
-  return _output;
+  std::list<std::string> result;
+  py2cpp::PyFunction pyFn;
+  pyFn.loadExp(_pyObject, "getOutputNames");
+  py2cpp::pyResult(result) = pyFn();
+  return result;
 }
 
-const std::list<std::string>& PyStudyFunction::errors()const
+std::string PyStudyFunction::errors()const
 {
-  return _errors;
+  std::string result;
+  py2cpp::PyFunction pyFn;
+  pyFn.loadExp(_pyObject, "getErrors");
+  py2cpp::pyResult(result) = pyFn();
+  return result;
+}
+
+bool PyStudyFunction::isValid()const
+{
+  std::string err = errors();
+  return err.empty();
+}
+
+std::list<std::string> PyStudyFunction::datafiles()const
+{
+  return std::list<std::string>();
 }
 
 }

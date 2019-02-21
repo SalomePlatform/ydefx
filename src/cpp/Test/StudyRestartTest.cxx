@@ -19,6 +19,8 @@
 #include "StudyRestartTest.hxx"
 #include "../Launcher.hxx" // possible conflict with KERNEL/Launcher/Launcher.hxx
 #include <algorithm>
+#include <thread>
+#include <chrono>
 
 void SampleTest::setUp()
 {
@@ -32,6 +34,11 @@ void SampleTest::cleanUp()
 {
 }
 
+/*
+ * There are some limitations when you reconnect to a job launched on a resource
+ * which does not have a batch manager. The state of the reconnected job will
+ * always be "ERROR" and it is not possible to know when it is finished.
+ */
 void SampleTest::studyTest()
 {
   Py_Initialize();
@@ -60,12 +67,21 @@ void SampleTest::studyTest()
     delete myJob;
 
     ydefx::Job* restoredJob = l.connectJob(jobDump, sample);
+    // On localhost you cannot completely reconnect the job because there is no
+    // batch manager. The job will be in the state "ERROR" but you can fetch the
+    // results anyway.
     CPPUNIT_ASSERT(restoredJob);
     CPPUNIT_ASSERT(l.lastError().empty());
+    // This "wait" will end instantly because of the "ERROR" state.
     bool ok = restoredJob->wait();
     CPPUNIT_ASSERT(ok);
     double progress = restoredJob->progress();
-    CPPUNIT_ASSERT(progress == 1.0);
+    // We can check the progress in order to know if the job is done, but we
+    // cannot detect if the job finished in error.
+    if(progress < 1.0)
+      std::this_thread::sleep_for(std::chrono::seconds(10));
+    double progress2 = restoredJob->progress();
+    CPPUNIT_ASSERT(progress <= progress2);
     ok = restoredJob->fetch();
     CPPUNIT_ASSERT(ok);
     std::vector<double> expectedResult = {0.5, 0.5, 0.5, 0.5};

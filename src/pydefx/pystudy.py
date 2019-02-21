@@ -36,7 +36,7 @@ def prepareDirectoryForLaunch(sample, result_directory, nb_branches, script,
   sample : Sample type
   result_directory : path to a result working directory.
   nb_branches : int
-  script : string
+  script : script / pyscript type
   return:
     extra_in_files: list of files to add to salome_parameters.in_files
     yacs_schema_path: path to the yacs schema (xml file).
@@ -44,7 +44,8 @@ def prepareDirectoryForLaunch(sample, result_directory, nb_branches, script,
   if sampleManager is None:
     sampleManager = defaultSampleManager()
   # export sample to result_directory
-  inputFiles = sampleManager.prepareRun(sample, result_directory)
+  inputFiles = sampleManager.prepareRun(script, sample, result_directory)
+
   # export nbbranches
   configpath = os.path.join(result_directory, "idefixconfig.json")
   dicconfig = {}
@@ -55,7 +56,7 @@ def prepareDirectoryForLaunch(sample, result_directory, nb_branches, script,
     json.dump(dicconfig, f, indent=2)
   studypath = os.path.join(result_directory, "idefixstudy.py")
   with open(studypath, "w") as f:
-    f.write(script)
+    f.write(script.script)
   # find generic schema
   filename = inspect.getframeinfo(inspect.currentframe()).filename
   install_directory = pathlib.Path(filename).resolve().parent
@@ -77,7 +78,7 @@ class PyStudy:
   def createNewJob(self, script, sample, params, sampleManager=None):
     """
     Create a new job out of those parameters:
-    script : string
+    script : script / pyscript type
     sample : sample to be evaluated (Sample class)
     params : job submission parameters (Parameters class)
     The result directory will contain all the files needed for a launch and a

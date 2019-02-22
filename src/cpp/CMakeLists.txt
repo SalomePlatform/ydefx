@@ -38,6 +38,7 @@ SET(ydefx_HEADERS
   JobParametersProxy.hxx
   Sample.hxx
   SamplePyConversions.hxx
+  PyConversions.hxx
   Exceptions.hxx
   MonoPyJob.hxx
   TMonoPyJob.hxx
@@ -54,11 +55,10 @@ ADD_LIBRARY(ydefx ${ydefx_SOURCES})
 TARGET_LINK_LIBRARIES(ydefx ${ydefx_LINK})
 TARGET_INCLUDE_DIRECTORIES(ydefx PUBLIC
                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/cpp>
-                          $<INSTALL_INTERFACE:include>)
+                          $<INSTALL_INTERFACE:${SALOME_INSTALL_HEADERS}>)
 
-INSTALL(TARGETS ydefx DESTINATION lib)
-INSTALL(TARGETS ydefx EXPORT Findydefx LIBRARY DESTINATION lib)
-INSTALL(FILES ${ydefx_HEADERS} DESTINATION include/ydefx)
-INSTALL(EXPORT Findydefx DESTINATION lib/cmake/ydefx)
+INSTALL(TARGETS ydefx DESTINATION ${SALOME_INSTALL_LIBS})
+INSTALL(TARGETS ydefx EXPORT ydefxCfg_cmake LIBRARY DESTINATION ${SALOME_INSTALL_LIBS})
+INSTALL(FILES ${ydefx_HEADERS} DESTINATION ${SALOME_INSTALL_HEADERS}/ydefx)
 
 ADD_SUBDIRECTORY(Test)

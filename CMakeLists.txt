@@ -25,6 +25,53 @@ SET(BUILD_SHARED_LIBS TRUE)
 
 OPTION(YDEFX_BUILD_GUI "Generate widgets" ON)
 
+FIND_PACKAGE(Py2cpp REQUIRED)
+
+# SalomeKERNEL can be useful in order to define SALOME_INSTALL directories and
+# for using salome test, but it is not a c++ dependency.
+FIND_PACKAGE(SalomeKERNEL NO_MODULE)
+
+IF(NOT SalomeKERNEL_FOUND)
+  MESSAGE("SalomeKERNEL not found. Salome installation paths will not be used")
+ENDIF()
+
+IF(NOT DEFINED SALOME_INSTALL_PYTHON)
+  EXECUTE_PROCESS ( COMMAND ${PYTHON_EXECUTABLE} -c
+  "from distutils import sysconfig; print(sysconfig.get_python_lib(plat_specific=True, prefix='${CMAKE_INSTALL_PREFIX}'))"
+                        OUTPUT_VARIABLE _ABS_PYTHON_MODULE_PATH
+                        RESULT_VARIABLE _PYTHON_pythonlib_result
+                        OUTPUT_STRIP_TRAILING_WHITESPACE )
+
+  IF (_PYTHON_pythonlib_result)
+    MESSAGE (SEND_ERROR "Could not set SALOME_INSTALL_PYTHON!")
+  ENDIF ()
+  GET_FILENAME_COMPONENT(_ABS_PYTHON_MODULE_PATH
+                         ${_ABS_PYTHON_MODULE_PATH} ABSOLUTE)
+  FILE(RELATIVE_PATH SALOME_INSTALL_PYTHON
+                     ${CMAKE_INSTALL_PREFIX} ${_ABS_PYTHON_MODULE_PATH})
+ENDIF(NOT DEFINED SALOME_INSTALL_PYTHON)
+
+IF(NOT DEFINED SALOME_INSTALL_BINS)
+  SET(SALOME_INSTALL_BINS "bin")
+ENDIF()
+IF(NOT DEFINED SALOME_INSTALL_LIBS)
+  SET(SALOME_INSTALL_LIBS "lib")
+ENDIF()
+IF(NOT DEFINED SALOME_INSTALL_HEADERS)
+  SET(SALOME_INSTALL_HEADERS "include")
+ENDIF()
+IF(NOT DEFINED SALOME_INSTALL_CMAKE)
+  SET(SALOME_INSTALL_CMAKE "lib/cmake/ydefx")
+ENDIF()
+
+SET(SALOME_INSTALL_PYTHON "${SALOME_INSTALL_PYTHON}" CACHE PATH "Path to install Python files")
+SET(SALOME_INSTALL_BINS "${SALOME_INSTALL_BINS}" CACHE PATH "Path to install binary files")
+SET(SALOME_INSTALL_LIBS "${SALOME_INSTALL_LIBS}" CACHE PATH "Path to install libraries")
+SET(SALOME_INSTALL_HEADERS "${SALOME_INSTALL_HEADERS}" CACHE PATH "Path to install headers")
+SET(SALOME_INSTALL_CMAKE "${SALOME_INSTALL_CMAKE}" CACHE PATH "Path to install cmake configuration files")
+
+# there are some problems if the configuration tools are included before the
+# detection of py2cpp and SalomeKERNEL
 SET(CONFIGURATION_ROOT_DIR $ENV{CONFIGURATION_ROOT_DIR} CACHE PATH "Path to the Salome CMake configuration files")
 IF(EXISTS ${CONFIGURATION_ROOT_DIR})
   LIST(APPEND CMAKE_MODULE_PATH "${CONFIGURATION_ROOT_DIR}/cmake")
@@ -38,18 +85,10 @@ ENDIF()
 FIND_PACKAGE(SalomePythonInterp REQUIRED)
 FIND_PACKAGE(SalomePythonLibs REQUIRED)
 
-SET(PY2CPP_ROOT_DIR $ENV{PY2CPP_ROOT_DIR} CACHE PATH "Path to py2cpp")
-IF( EXISTS ${PY2CPP_ROOT_DIR} )
-  LIST(APPEND CMAKE_MODULE_PATH "${PY2CPP_ROOT_DIR}/lib/cmake/py2cpp")
-ELSE()
-  MESSAGE(FATAL_ERROR "We absolutely need py2cpp, please define PY2CPP_ROOT_DIR")
-ENDIF()
-FIND_PACKAGE(Py2cpp REQUIRED)
-
 IF(YDEFX_BUILD_GUI)
   FIND_PACKAGE(Qt5Widgets CONFIG REQUIRED)
 ENDIF(YDEFX_BUILD_GUI)
 
-SET(SALOME_INSTALL_PYTHON "${SALOME_INSTALL_PYTHON}" CACHE PATH "Install Python files")
-
 ADD_SUBDIRECTORY(src)
+
+INSTALL(EXPORT ydefxCfg_cmake DESTINATION ${SALOME_INSTALL_CMAKE} FILE ydefxConfig.cmake)

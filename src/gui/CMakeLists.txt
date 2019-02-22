@@ -17,17 +17,6 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-#INCLUDE(UseQtExt)
-#INCLUDE_DIRECTORIES(
-#  ${QT_INCLUDES}
-#  ${PROJECT_SOURCE_DIR}/src/cpp
-#)
-
-#ADD_DEFINITIONS(
-#  ${QT_DEFINITIONS}
-#  ${GUI_DEFINITIONS}
-#  ${PYTHON_DEFINITIONS}
-#)
 SET(CMAKE_AUTOMOC ON)
 
 INCLUDE_DIRECTORIES(
@@ -39,27 +28,31 @@ ADD_DEFINITIONS(
   ${PYTHON_DEFINITIONS}
 )
 
-SET(YDEFX_SOURCES
+SET(YDEFXGUI_SOURCES
   ResourceWidget.cxx
   ParamsConfig.cxx
   PathsConfig.cxx
   QuickConfig.cxx
 )
 
-SET(YDEFX_HEADERS
+SET(YDEFXGUI_HEADERS
   ResourceWidget.hxx
 )
 
-SET(YDEFX_link_LIBRARIES
+SET(YDEFXGUI_link_LIBRARIES
   Qt5::Widgets
   ydefx
 )
 
-ADD_LIBRARY(ydefxgui ${YDEFX_SOURCES})
-TARGET_LINK_LIBRARIES(ydefxgui ${YDEFX_link_LIBRARIES})
+ADD_LIBRARY(ydefxgui ${YDEFXGUI_SOURCES})
+TARGET_LINK_LIBRARIES(ydefxgui ${YDEFXGUI_link_LIBRARIES})
 TARGET_INCLUDE_DIRECTORIES(ydefxgui PUBLIC
                           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/gui>
-                          $<INSTALL_INTERFACE:include>)
+                          $<INSTALL_INTERFACE:${SALOME_INSTALL_HEADERS}>)
 
 ADD_EXECUTABLE(ydefxgui.exe ydefxgui.cxx)
 TARGET_LINK_LIBRARIES(ydefxgui.exe ydefxgui)
+
+INSTALL(TARGETS ydefxgui DESTINATION ${SALOME_INSTALL_LIBS})
+INSTALL(TARGETS ydefxgui EXPORT ydefxCfg_cmake LIBRARY DESTINATION ${SALOME_INSTALL_LIBS})
+INSTALL(FILES ${YDEFXGUI_HEADERS} DESTINATION ${SALOME_INSTALL_HEADERS}/ydefx)

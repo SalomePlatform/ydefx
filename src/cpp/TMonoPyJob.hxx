@@ -84,7 +84,7 @@ public:
     {
       py2cpp::PyFunction pyFn;
       pyFn.loadExp(_pyStudy, "getResult");
-      fetchResults(_pyStudy.getAttr("sample"), _sample);
+      fetchResults(pyFn(), _sample);
     }
     catch(std::exception& e)
     {

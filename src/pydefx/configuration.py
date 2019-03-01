@@ -46,7 +46,7 @@ def newResultDirectory(basedir=None):
 def defaultWckey(resource="localhost"):
   result = ""
   if resource != "localhost":
-    result = "P11U5:CARBONES"
+    result = "P11N0:SALOME"
   return result
 
 def availableResources():

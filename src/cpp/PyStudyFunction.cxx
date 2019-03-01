@@ -33,15 +33,50 @@ namespace ydefx
 PyStudyFunction::PyStudyFunction()
 : _pyObject(nullptr)
 {
+  py2cpp::AutoGIL gil;
   py2cpp::PyFunction objConstructor;
   objConstructor.loadExp("pydefx", "PyScript");
   _pyObject = objConstructor();
 }
 
-PyStudyFunction::~PyStudyFunction(){}
+PyStudyFunction::PyStudyFunction(const PyStudyFunction& copy)
+: _pyObject(nullptr)
+{
+  if(copy._pyObject)
+  {
+    py2cpp::AutoGIL gil;
+    py2cpp::PyFunction deepCopyFn;
+    deepCopyFn.loadExp("copy", "deepcopy");
+    _pyObject = deepCopyFn(copy._pyObject);
+  }
+}
+
+PyStudyFunction::~PyStudyFunction()
+{
+  py2cpp::AutoGIL gil;
+  _pyObject.reset(nullptr);
+}
+
+PyStudyFunction& PyStudyFunction::operator=(const PyStudyFunction& copy)
+{
+  if(this != &copy)
+  {
+    py2cpp::AutoGIL gil;
+    if(copy._pyObject)
+    {
+      py2cpp::PyFunction deepCopyFn;
+      deepCopyFn.loadExp("copy", "deepcopy");
+      _pyObject = deepCopyFn(copy._pyObject);
+    }
+    else
+      _pyObject.reset(nullptr);
+  }
+  return *this;
+}
 
 void PyStudyFunction::loadFile(const std::string& path)
 {
+  py2cpp::AutoGIL gil;
   py2cpp::PyFunction pyFn;
   pyFn.loadExp(_pyObject, "loadFile");
   pyFn(path);
@@ -49,6 +84,7 @@ void PyStudyFunction::loadFile(const std::string& path)
 
 void PyStudyFunction::loadString(const std::string& value)
 {
+  py2cpp::AutoGIL gil;
   py2cpp::PyFunction pyFn;
   pyFn.loadExp(_pyObject, "loadString");
   pyFn(value);
@@ -56,6 +92,7 @@ void PyStudyFunction::loadString(const std::string& value)
 
 void PyStudyFunction::save(const std::string& path)
 {
+  py2cpp::AutoGIL gil;
   py2cpp::PyFunction pyFn;
   pyFn.loadExp(_pyObject, "saveFile");
   pyFn(path);
@@ -64,6 +101,7 @@ void PyStudyFunction::save(const std::string& path)
 std::string PyStudyFunction::content()const
 {
   std::string result;
+  py2cpp::AutoGIL gil;
   py2cpp::PyFunction pyFn;
   pyFn.loadExp(_pyObject, "content");
   py2cpp::pyResult(result) = pyFn();
@@ -73,6 +111,7 @@ std::string PyStudyFunction::content()const
 std::list<std::string> PyStudyFunction::inputNames()const
 {
   std::list<std::string> result;
+  py2cpp::AutoGIL gil;
   py2cpp::PyFunction pyFn;
   pyFn.loadExp(_pyObject, "getInputNames");
   py2cpp::pyResult(result) = pyFn();
@@ -82,6 +121,7 @@ std::list<std::string> PyStudyFunction::inputNames()const
 std::list<std::string> PyStudyFunction::outputNames()const
 {
   std::list<std::string> result;
+  py2cpp::AutoGIL gil;
   py2cpp::PyFunction pyFn;
   pyFn.loadExp(_pyObject, "getOutputNames");
   py2cpp::pyResult(result) = pyFn();
@@ -91,6 +131,7 @@ std::list<std::string> PyStudyFunction::outputNames()const
 std::string PyStudyFunction::errors()const
 {
   std::string result;
+  py2cpp::AutoGIL gil;
   py2cpp::PyFunction pyFn;
   pyFn.loadExp(_pyObject, "getErrors");
   py2cpp::pyResult(result) = pyFn();

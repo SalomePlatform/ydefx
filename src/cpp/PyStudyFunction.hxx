@@ -27,6 +27,8 @@ class PyStudyFunction :  StudyFunction
 {
 public:
   PyStudyFunction();
+  PyStudyFunction(const PyStudyFunction& copy);
+  PyStudyFunction& operator=(const PyStudyFunction& copy);
   virtual ~PyStudyFunction();
   virtual void loadFile(const std::string& path);
   virtual void loadString(const std::string&);

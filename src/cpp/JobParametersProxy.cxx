@@ -33,16 +33,52 @@ namespace ydefx
 JobParametersProxy::JobParametersProxy()
 :  _pyParameters(nullptr)
 {
+  py2cpp::AutoGIL gil;
   py2cpp::PyFunction objConstructor;
   objConstructor.loadExp("pydefx", "Parameters");
   _pyParameters = objConstructor();
 }
 
+JobParametersProxy::JobParametersProxy(const JobParametersProxy& copy)
+:  _pyParameters(nullptr)
+{
+  if(copy._pyParameters)
+  {
+    py2cpp::AutoGIL gil;
+    py2cpp::PyFunction deepCopyFn;
+    deepCopyFn.loadExp("copy", "deepcopy");
+    _pyParameters = deepCopyFn(copy._pyParameters);
+  }
+}
+
+JobParametersProxy::~JobParametersProxy()
+{
+  py2cpp::AutoGIL gil;
+  _pyParameters.reset(nullptr);
+}
+
+JobParametersProxy& JobParametersProxy::operator=(const JobParametersProxy& copy)
+{
+  if(this != &copy)
+  {
+    py2cpp::AutoGIL gil;
+    if(copy._pyParameters)
+    {
+      py2cpp::PyFunction deepCopyFn;
+      deepCopyFn.loadExp("copy", "deepcopy");
+      _pyParameters = deepCopyFn(copy._pyParameters);
+    }
+    else
+      _pyParameters.reset(nullptr);
+  }
+  return *this;
+}
 
 std::string
 JobParametersProxy::getAttrString(const std::string& attributeName)const
 {
   std::string result;
+  py2cpp::AutoGIL gil;
   py2cpp::pyResult(result) = _pyParameters.getAttr("salome_parameters")
                                           .getAttr(attributeName);
   return result;
@@ -52,6 +88,7 @@ void
 JobParametersProxy::setAttr(const std::string& attributeName,
                             const std::string& value)
 {
+  py2cpp::AutoGIL gil;
   _pyParameters.getAttr("salome_parameters")
                .setAttr(attributeName, py2cpp::toPyPtr(value));
 }
@@ -59,6 +96,7 @@ JobParametersProxy::setAttr(const std::string& attributeName,
 int JobParametersProxy::getResAttr(const std::string& attributeName)const
 {
   int result;
+  py2cpp::AutoGIL gil;
   py2cpp::pyResult(result) = _pyParameters.getAttr("salome_parameters")
                                           .getAttr("resource_required")
                                           .getAttr(attributeName);
@@ -67,6 +105,7 @@ int JobParametersProxy::getResAttr(const std::string& attributeName)const
 
 void JobParametersProxy::setResAttr(const std::string& attributeName, int value)
 {
+  py2cpp::AutoGIL gil;
   _pyParameters.getAttr("salome_parameters")
                .getAttr("resource_required")
                .setAttr(attributeName, py2cpp::toPyPtr(value));
@@ -124,6 +163,7 @@ void JobParametersProxy::env_file(const std::string& v)
 
 std::list<std::string> JobParametersProxy::in_files()const
 {
+  py2cpp::AutoGIL gil;
   std::list<std::string> result;
   py2cpp::pyResult(result) = _pyParameters.getAttr("salome_parameters")
                                           .getAttr("in_files");
@@ -146,6 +186,7 @@ void JobParametersProxy::remove_in_file(const std::string& path)
 
 void JobParametersProxy::in_files(const std::list<std::string>& pathList)
 {
+  py2cpp::AutoGIL gil;
   _pyParameters.getAttr("salome_parameters")
                .setAttr("in_files", py2cpp::toPyPtr(pathList));
 }
@@ -193,6 +234,7 @@ void JobParametersProxy::maximum_duration(const std::string& v)
 // ResourceParameters
 std::string JobParametersProxy::resource_name()const
 {
+  py2cpp::AutoGIL gil;
   std::string result;
   py2cpp::pyResult(result) = _pyParameters.getAttr("salome_parameters")
                                           .getAttr("resource_required")
@@ -202,6 +244,7 @@ std::string JobParametersProxy::resource_name()const
 
 void JobParametersProxy::resource_name(const std::string& name)
 {
+  py2cpp::AutoGIL gil;
   _pyParameters.getAttr("salome_parameters")
                .getAttr("resource_required")
                .setAttr("name", py2cpp::toPyPtr(name));
@@ -269,6 +312,7 @@ void JobParametersProxy::partition(const std::string& v)
 
 bool JobParametersProxy::exclusive()const
 {
+  py2cpp::AutoGIL gil;
   bool result;
   py2cpp::pyResult(result) = _pyParameters.getAttr("salome_parameters")
                                           .getAttr("exclusive");
@@ -277,12 +321,14 @@ bool JobParametersProxy::exclusive()const
 
 void JobParametersProxy::exclusive(bool v)
 {
+  py2cpp::AutoGIL gil;
   _pyParameters.getAttr("salome_parameters")
                .setAttr("exclusive", py2cpp::toPyPtr(v));
 }
 
 unsigned int JobParametersProxy::mem_per_cpu()const
 {
+  py2cpp::AutoGIL gil;
   int result;
   py2cpp::pyResult(result) = _pyParameters.getAttr("salome_parameters")
                                           .getAttr("mem_per_cpu");
@@ -293,6 +339,7 @@ unsigned int JobParametersProxy::mem_per_cpu()const
 
 void JobParametersProxy::mem_per_cpu(unsigned int v)
 {
+  py2cpp::AutoGIL gil;
   _pyParameters.getAttr("salome_parameters")
                .setAttr("mem_per_cpu", py2cpp::toPyPtr(v));
 }
@@ -320,6 +367,7 @@ void JobParametersProxy::extra_params(const std::string& v)
 
 unsigned int JobParametersProxy::nb_branches()const
 {
+  py2cpp::AutoGIL gil;
   unsigned int result;
   py2cpp::pyResult(result) = _pyParameters.getAttr("nb_branches");
   return result;
@@ -327,11 +375,13 @@ unsigned int JobParametersProxy::nb_branches()const
 
 void JobParametersProxy::nb_branches(unsigned int v)
 {
+  py2cpp::AutoGIL gil;
   _pyParameters.setAttr("nb_branches", py2cpp::toPyPtr(v));
 }
 
 void JobParametersProxy::configureResource(const std::string& resourceName)
 {
+  py2cpp::AutoGIL gil;
   py2cpp::PyFunction pyFn;
   pyFn.loadExp(_pyParameters, "configureResource");
   pyFn(resourceName);
@@ -339,13 +389,23 @@ void JobParametersProxy::configureResource(const std::string& resourceName)
 
 void JobParametersProxy::createResultDirectory(const std::string& basePath)
 {
+  py2cpp::AutoGIL gil;
   py2cpp::PyFunction pyFn;
   pyFn.loadExp(_pyParameters, "createResultDirectory");
   pyFn(basePath);
 }
 
+void JobParametersProxy::createTmpResultDirectory()
+{
+  py2cpp::AutoGIL gil;
+  py2cpp::PyFunction pyFn;
+  pyFn.loadExp(_pyParameters, "createTmpResultDirectory");
+  pyFn();
+}
+
 std::list<std::string> JobParametersProxy::AvailableResources()
 {
+  py2cpp::AutoGIL gil;
   std::list<std::string> result;
   py2cpp::PyFunction pyFn;
   pyFn.loadExp("pydefx.configuration", "availableResources");

@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
   {
     ydefx::JobParametersProxy jpp;
     jpp.createResultDirectory("/tmp");
-    ResourceWidget mygui(jpp);
+    ydefx::ResourceWidget mygui(jpp);
     mygui.show();
     ret = app.exec();
     std::cout << "job_name:" << jpp.job_name() << std::endl;

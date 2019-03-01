@@ -21,6 +21,8 @@
 #include "JobParametersProxy.hxx"
 #include <QtWidgets>
 
+namespace ydefx
+{
 class QuickConfigWidget: public QScrollArea
 {
   Q_OBJECT
@@ -39,5 +41,5 @@ signals:
 private:
   ydefx::JobParametersProxy& _model;
 };
-
+}
 #endif //IDEFX_QuickConfigWidget_HXX

@@ -21,6 +21,8 @@
 #include "JobParametersProxy.hxx"
 #include <QtWidgets>
 
+namespace ydefx
+{
 class ParamsConfigWidget: public QScrollArea
 {
   Q_OBJECT
@@ -48,5 +50,5 @@ private:
   ydefx::JobParametersProxy& _model;
   QTextEdit * _extraEdit;
 };
-
+}
 #endif //IDEFX_ParamsConfigWidget_HXX

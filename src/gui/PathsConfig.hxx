@@ -21,6 +21,8 @@
 #include "JobParametersProxy.hxx"
 #include <QtWidgets>
 
+namespace ydefx
+{
 class PathsConfigWidget: public QScrollArea
 {
   Q_OBJECT
@@ -46,5 +48,5 @@ private:
   QListWidget * _inputFilesList;
   QPushButton *_removeInputFilesButton;
 };
-
+}
 #endif //IDEFX_PathsConfigWidget_HXX

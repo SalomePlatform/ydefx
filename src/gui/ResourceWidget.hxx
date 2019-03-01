@@ -20,6 +20,8 @@
 #define IDEFX_RESOURCEWIDGET_HXX
 #include "JobParametersProxy.hxx"
 #include <QtWidgets>
+namespace ydefx
+{
 
 class ResourceWidget: public QTabWidget
 {
@@ -30,5 +32,5 @@ public:
 private:
   ydefx::JobParametersProxy& _model;
 };
-
+}
 #endif //IDEFX_RESOURCEWIDGET_HXX

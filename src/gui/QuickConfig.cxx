@@ -18,6 +18,8 @@
 //
 #include "QuickConfig.hxx"
 
+namespace ydefx
+{
 QuickConfigWidget::QuickConfigWidget(ydefx::JobParametersProxy& model,
                                      QWidget* parent)
 : QScrollArea(parent)
@@ -76,4 +78,5 @@ void QuickConfigWidget::updateNbBranches(int value)
 {
   _model.nb_branches(value);
   emit defaultNbBranches(value);
+}
 }

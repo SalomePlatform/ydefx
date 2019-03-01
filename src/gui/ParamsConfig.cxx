@@ -18,6 +18,8 @@
 //
 #include "ParamsConfig.hxx"
 
+namespace ydefx
+{
 ParamsConfigWidget::ParamsConfigWidget(ydefx::JobParametersProxy& model,
                                        QWidget* parent)
 : QScrollArea(parent)
@@ -196,3 +198,4 @@ void ParamsConfigWidget::updateExtraParams()
   _model.extra_params(_extraEdit->toPlainText().toStdString());
 }
 
+}

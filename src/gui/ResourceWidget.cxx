@@ -22,6 +22,8 @@
 #include "PathsConfig.hxx"
 #include "ParamsConfig.hxx"
 
+namespace ydefx
+{
 ResourceWidget::ResourceWidget(ydefx::JobParametersProxy& model,
                                QWidget* parent)
 : QTabWidget(parent)
@@ -43,4 +45,5 @@ ResourceWidget::ResourceWidget(ydefx::JobParametersProxy& model,
 
 ResourceWidget::~ResourceWidget()
 {
+}
 }

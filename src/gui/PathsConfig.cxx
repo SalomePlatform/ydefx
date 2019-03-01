@@ -18,6 +18,8 @@
 //
 #include "PathsConfig.hxx"
 
+namespace ydefx
+{
 PathsConfigWidget::PathsConfigWidget(ydefx::JobParametersProxy& model,
                                      QWidget* parent)
 : QScrollArea(parent)
@@ -183,4 +185,5 @@ void PathsConfigWidget::removeInputFiles()
     _model.remove_in_file(itemName);
     delete item;
   }
+}
 }

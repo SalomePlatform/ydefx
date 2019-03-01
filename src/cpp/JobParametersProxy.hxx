@@ -29,6 +29,9 @@ class JobParametersProxy
 {
 public:
   JobParametersProxy();
+  JobParametersProxy(const JobParametersProxy& copy);
+  JobParametersProxy& operator=(const JobParametersProxy& copy);
+  ~JobParametersProxy();
 
   std::string job_name()const;
   void job_name(const std::string& v);
@@ -106,6 +109,8 @@ public:
   void configureResource(const std::string& resourceName);
   //! create a new result directory as a subdirectory of the given path.
   void createResultDirectory(const std::string& basePath);
+  //! create a new result directory in the system tmp
+  void createTmpResultDirectory();
 
   friend PyObject * py2cpp::toPy(const JobParametersProxy& jp);
   static std::list<std::string> AvailableResources();

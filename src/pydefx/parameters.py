@@ -19,6 +19,7 @@
 #
 import salome
 from . import configuration
+import tempfile
 
 class Parameters:
   def __init__(self, resource="localhost",
@@ -52,4 +53,9 @@ class Parameters:
     self.salome_parameters.wckey = configuration.defaultWckey(resource)
 
   def createResultDirectory(self, result_base_dir):
-    self.salome_parameters.result_directory = configuration.newResultDirectory(result_base_dir)
+    self.salome_parameters.result_directory = configuration.newResultDirectory(
+                                                                result_base_dir)
+
+  def createTmpResultDirectory(self):
+    self.salome_parameters.result_directory = configuration.newResultDirectory(
+                                                          tempfile.gettempdir())

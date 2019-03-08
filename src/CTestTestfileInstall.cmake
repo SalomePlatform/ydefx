@@ -17,15 +17,11 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-# For salome test
-IF(SALOME_BUILD_TESTS)
-  INSTALL(FILES CTestTestfileInstall.cmake
-          DESTINATION ${SALOME_YDEFX_INSTALL_TEST}
-          RENAME CTestTestfile.cmake)
-ENDIF(SALOME_BUILD_TESTS)
+SET(SALOME_TEST_DRIVER "$ENV{KERNEL_ROOT_DIR}/bin/salome/appliskel/salome_test_driver.py")
 
-ADD_SUBDIRECTORY(cpp)
-ADD_SUBDIRECTORY(pydefx)
-IF(YDEFX_BUILD_GUI)
-  ADD_SUBDIRECTORY(gui)
-ENDIF(YDEFX_BUILD_GUI)
+SET(COMPONENT_NAME YDEFX)
+SET(TIMEOUT        500)
+
+SUBDIRS(
+    cpp
+    )

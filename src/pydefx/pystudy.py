@@ -43,6 +43,8 @@ def prepareDirectoryForLaunch(sample, result_directory, nb_branches, script,
   """
   if sampleManager is None:
     sampleManager = defaultSampleManager()
+  if not os.path.exists(result_directory):
+    os.makedirs(result_directory)
   # export sample to result_directory
   inputFiles = sampleManager.prepareRun(script, sample, result_directory)
 

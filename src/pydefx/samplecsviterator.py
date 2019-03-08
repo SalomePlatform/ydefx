@@ -52,7 +52,7 @@ class SampleIterator:
       datapath = SampleIterator.DATAFILE
       outputnamespath = SampleIterator.OUTPUTNAMESFILE
       resultpath = SampleIterator.RESULTFILE
-      
+
     self.iterNb   = -1
     self.datafile = open(datapath, newline='')
     self.data     = csv.DictReader(self.datafile, quoting=csv.QUOTE_NONNUMERIC)

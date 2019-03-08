@@ -346,7 +346,7 @@ py2cpp::ConversionCheck errorsFromPy(PyObject* obj, Sample<Ts...>& sample)
       if(Py_None != pyValue)
         check.addError(py2cpp::fromPy(pyValue, cppValue));
       if(check)
-        sample.errors().push_back(cppValue);
+        sample.errors()[i] = cppValue;
     }
   }
   else

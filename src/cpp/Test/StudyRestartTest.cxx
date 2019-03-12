@@ -74,6 +74,7 @@ void SampleTest::studyTest()
     CPPUNIT_ASSERT(l.lastError().empty());
     // This "wait" will end instantly because of the "ERROR" state.
     bool ok = restoredJob->wait();
+    // ok means that the wait command succeeded. It is not the state of the job.
     CPPUNIT_ASSERT(ok);
     double progress = restoredJob->progress();
     // We can check the progress in order to know if the job is done, but we

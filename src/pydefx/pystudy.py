@@ -196,6 +196,11 @@ class PyStudy:
       f.write(job_string)
 
   def getResult(self):
+    """
+    Try to get the result file and if it was possible the results are loaded in
+    the sample.
+    An exception may be thrown if it was not possible to get the file.
+    """
     if self.job_id < 0 :
       raise Exception("Cannot get the results if the job is not created!")
     launcher = salome.naming_service.Resolve('/SalomeLauncher')
@@ -207,7 +212,22 @@ class PyStudy:
                                     self.sampleManager.getResultFileName(),
                                     tmp_workdir):
       self.sampleManager.loadResult(self.sample, tmp_workdir)
+    else:
+      raise Exception("Cannot get the result file!")
     return self.sample
+
+  def resultAvailable(self):
+    """
+    Try to get the result and return True in case of success with no exception.
+    In case of success the results are loaded in the sample.
+    """
+    resultFound = False
+    try:
+      self.getResult()
+      resultFound = True
+    except:
+      resultFound = False
+    return resultFound
 
   def getJobState(self):
     if self.job_id < 0:
@@ -221,7 +241,8 @@ class PyStudy:
     state = self.getJobState()
     if state == "CREATED" or state == "QUEUED" :
       return 0.0
-    self.getResult();
+    if not self.resultAvailable():
+      return 0.0
     return self.sample.progressRate()
 
   def dump(self):

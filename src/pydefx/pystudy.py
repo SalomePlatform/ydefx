@@ -205,15 +205,59 @@ class PyStudy:
       raise Exception("Cannot get the results if the job is not created!")
     launcher = salome.naming_service.Resolve('/SalomeLauncher')
     state = launcher.getJobState(self.job_id)
+    tmp_workdir = self.params.salome_parameters.result_directory
+    searchResults = False
+    errorIfNoResults = False
+    errorMessage = ""
     if state == "CREATED" :
       raise Exception("Cannot get the results if the job is not launched!")
-    tmp_workdir = self.params.salome_parameters.result_directory
-    if 1 == launcher.getJobWorkFile(self.job_id,
-                                    self.sampleManager.getResultFileName(),
-                                    tmp_workdir):
-      self.sampleManager.loadResult(self.sample, tmp_workdir)
-    else:
-      raise Exception("Cannot get the result file!")
+    elif state ==  "QUEUED" or state == "IN_PROCESS":
+      # no results available at this point. Try again later! Not an error.
+      searchResults = False
+    elif state == "FINISHED" :
+      # verify the return code of the execution
+      searchResults = True
+      if(launcher.getJobWorkFile(self.job_id, "logs/exit_code.log", tmp_workdir)):
+        exit_code_file = os.path.join(tmp_workdir, "exit_code.log")
+        exit_code = ""
+        if os.path.isfile(exit_code_file):
+          with open(exit_code_file) as myfile:
+            exit_code = myfile.read()
+            exit_code = exit_code.strip()
+        if exit_code == "0" :
+          errorIfNoResults = True # we expect to have full results
+        else:
+          errorMessage = "An error occured during the execution of the YACS schema."
+      else:
+        errorMessage = "Failed to get the exit code of the YACS schema execution."
+
+    elif state == "RUNNING" or state == "PAUSED" or state == "ERROR" :
+      # partial results may be available
+      searchResults = True
+    elif state == "FAILED":
+      # We may have some partial results because the job could have been
+      # canceled or stoped by timeout.
+      searchResults = True
+      errorMessage = "Job execution failed!"
+    if searchResults :
+      if 1 == launcher.getJobWorkFile(self.job_id,
+                                      self.sampleManager.getResultFileName(),
+                                      tmp_workdir):
+        try:
+          self.sampleManager.loadResult(self.sample, tmp_workdir)
+        except Exception as err:
+          if errorIfNoResults:
+            raise err
+      elif errorIfNoResults:
+        errorMessage = "The job is finished but we cannot get the result file!"
+    if len(errorMessage) > 0 :
+      warningMessage = """
+The results you get may be incomplete or incorrect.
+For further details, see {}/logs directory on {}.""".format(
+                          self.params.salome_parameters.work_directory,
+                          self.params.salome_parameters.resource_required.name)
+      errorMessage += warningMessage
+      raise Exception(errorMessage)
     return self.sample
 
   def resultAvailable(self):

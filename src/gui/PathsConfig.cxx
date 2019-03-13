@@ -37,16 +37,6 @@ PathsConfigWidget::PathsConfigWidget(ydefx::JobParametersProxy& model,
   QLineEdit *editLine;
 
   hLayout = new QHBoxLayout();
-  label = new QLabel(tr("Job name:"));
-  editLine = new QLineEdit();
-  editLine->setText(_model.job_name().c_str());
-  hLayout->addWidget(label);
-  hLayout->addWidget(editLine);
-  mainLayout->addLayout(hLayout);
-  connect(editLine, SIGNAL(textChanged(const QString &)),
-          this, SLOT(updateJobName(const QString&)));
-
-  hLayout = new QHBoxLayout();
   label = new QLabel(tr("Remote work directory:"));
   editLine = new QLineEdit();
   editLine->setText(_model.work_directory().c_str());
@@ -71,6 +61,19 @@ PathsConfigWidget::PathsConfigWidget(ydefx::JobParametersProxy& model,
           this, SLOT(updateLocalDirectory(const QString&)));
   connect(localdirButton,SIGNAL(clicked()),this, SLOT(onChoseLocaldir()));
 
+  hLayout = new QHBoxLayout();
+  label = new QLabel(tr("Preprocessing script for the frontal:"));
+  _preprocScriptEdit = new QLineEdit();
+  _preprocScriptEdit->setText(_model.pre_command().c_str());
+  QPushButton* preprocButton = new QPushButton("...");
+  hLayout->addWidget(label);
+  hLayout->addWidget(_preprocScriptEdit);
+  hLayout->addWidget(preprocButton);
+  mainLayout->addLayout(hLayout);
+  connect(_preprocScriptEdit, SIGNAL(textChanged(const QString &)),
+          this, SLOT(updatePreprocessingScript(const QString&)));
+  connect(preprocButton,SIGNAL(clicked()),
+          this, SLOT(onChosePreprocessingScript()));
 
   QGroupBox * inputFilesBox = new QGroupBox;
   inputFilesBox->setTitle(tr("Additional input files:"));
@@ -103,11 +106,6 @@ PathsConfigWidget::~PathsConfigWidget()
 {
 }
 
-void PathsConfigWidget::updateJobName(const QString& value)
-{
-  _model.job_name(value.toStdString());
-}
-
 void PathsConfigWidget::updateWorkingDirectory(const QString& value)
 {
   _model.work_directory(value.toStdString());
@@ -116,6 +114,11 @@ void PathsConfigWidget::updateWorkingDirectory(const QString& value)
 void PathsConfigWidget::updateLocalDirectory(const QString& value)
 {
   _model.result_directory(value.toStdString());
+}
+
+void PathsConfigWidget::updatePreprocessingScript(const QString& value)
+{
+  _model.pre_command(value.toStdString());
 }
 
 void PathsConfigWidget::onChoseLocaldir()
@@ -131,6 +134,20 @@ void PathsConfigWidget::onChoseLocaldir()
   {
     _model.result_directory(dir.toStdString());
     _localdirEdit->setText(dir);
+  }
+}
+
+void PathsConfigWidget::onChosePreprocessingScript()
+{
+  QString file;
+  file = QFileDialog::getOpenFileName(this,
+                                      tr("Choose a script file"),
+                                      "");
+
+  if (file != "")
+  {
+    _model.pre_command(file.toStdString());
+    _preprocScriptEdit->setText(file);
   }
 }
 

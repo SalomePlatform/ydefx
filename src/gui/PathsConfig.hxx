@@ -31,10 +31,11 @@ public:
   virtual ~PathsConfigWidget();
 
 public slots:
-  void updateJobName(const QString& value);
   void updateWorkingDirectory(const QString& value);
   void updateLocalDirectory(const QString& value);
+  void updatePreprocessingScript(const QString& value);
   void onChoseLocaldir();
+  void onChosePreprocessingScript();
   void inputSelectionChanged();
   void addInputFiles();
   void removeInputFiles();
@@ -45,6 +46,7 @@ signals:
 private:
   ydefx::JobParametersProxy& _model;
   QLineEdit * _localdirEdit;
+  QLineEdit * _preprocScriptEdit;
   QListWidget * _inputFilesList;
   QPushButton *_removeInputFilesButton;
 };

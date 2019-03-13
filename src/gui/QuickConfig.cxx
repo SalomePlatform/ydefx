@@ -57,6 +57,16 @@ QuickConfigWidget::QuickConfigWidget(ydefx::JobParametersProxy& model,
   connect(nb_branchesEdit, SIGNAL(valueChanged(int)),
           this, SLOT(updateNbBranches(int)));
 
+  hLayout = new QHBoxLayout();
+  QLabel *label = new QLabel(tr("Job name:"));
+  QLineEdit *editLine = new QLineEdit();
+  editLine->setText(_model.job_name().c_str());
+  hLayout->addWidget(label);
+  hLayout->addWidget(editLine);
+  mainLayout->addLayout(hLayout);
+  connect(editLine, SIGNAL(textChanged(const QString &)),
+          this, SLOT(updateJobName(const QString&)));
+
   mainLayout->addStretch();
   setWidget(mainWidget);
   setWidgetResizable (true);
@@ -64,6 +74,11 @@ QuickConfigWidget::QuickConfigWidget(ydefx::JobParametersProxy& model,
 
 QuickConfigWidget::~QuickConfigWidget()
 {
+}
+
+void QuickConfigWidget::updateJobName(const QString& value)
+{
+  _model.job_name(value.toStdString());
 }
 
 void QuickConfigWidget::updateResource(const QString& value)

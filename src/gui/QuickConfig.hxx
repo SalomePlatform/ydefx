@@ -31,6 +31,7 @@ public:
   virtual ~QuickConfigWidget();
 
 public slots:
+  void updateJobName(const QString& value);
   void updateResource(const QString& value);
   void updateNbBranches(int value);
 

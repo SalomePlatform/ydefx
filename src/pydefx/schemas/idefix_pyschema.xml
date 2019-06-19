@@ -62,6 +62,15 @@ with open("idefixconfig.json", "r") as f:
   config = json.load(f)
 nbbranches=config["nbbranches"]
 studymodule=config["studymodule"]
+
+prescript = None
+try:
+  with open("idefix_prescript.py") as f:
+    prescript = f.read()
+except FileNotFoundError:
+   pass
+if not prescript is None:
+  exec(prescript)
 ]]></code></script>
       <load container="DefaultContainer"/>
       <outport name="nbbranches" type="int"/>

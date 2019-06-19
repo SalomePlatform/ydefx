@@ -26,58 +26,26 @@ import json
 from . import samplecsvmanager
 from . import parameters
 from . import configuration
+from . import defaultschemabuilder
 
 def defaultSampleManager():
   return samplecsvmanager.SampleManager()
 
-def prepareDirectoryForLaunch(sample, result_directory, nb_branches, script,
-                                 sampleManager=None):
-  """
-  sample : Sample type
-  result_directory : path to a result working directory.
-  nb_branches : int
-  script : script / pyscript type
-  return:
-    extra_in_files: list of files to add to salome_parameters.in_files
-    yacs_schema_path: path to the yacs schema (xml file).
-  """
-  if sampleManager is None:
-    sampleManager = defaultSampleManager()
-  if not os.path.exists(result_directory):
-    os.makedirs(result_directory)
-  # export sample to result_directory
-  inputFiles = sampleManager.prepareRun(script, sample, result_directory)
-
-  # export nbbranches
-  configpath = os.path.join(result_directory, "idefixconfig.json")
-  dicconfig = {}
-  dicconfig["nbbranches"]  = nb_branches
-  dicconfig["studymodule"] = "idefixstudy"
-  dicconfig["sampleIterator"] = sampleManager.getModuleName()
-  with open(configpath, "w") as f:
-    json.dump(dicconfig, f, indent=2)
-  studypath = os.path.join(result_directory, "idefixstudy.py")
-  with open(studypath, "w") as f:
-    f.write(script.script)
-  # find generic schema
-  filename = inspect.getframeinfo(inspect.currentframe()).filename
-  install_directory = pathlib.Path(filename).resolve().parent
-  yacs_schema_path = os.path.join(install_directory, "schemas",
-                                  "idefix_pyschema.xml")
-  plugin_path = os.path.join(install_directory, "schemas", "plugin.py")
-  # create salome params
-  extra_in_files = []
-  extra_in_files.extend([configpath, studypath, plugin_path])
-  extra_in_files.extend(inputFiles)
-  return extra_in_files, yacs_schema_path
-
 class PyStudy:
   JOB_DUMP_NAME = "jobDump.xml"
-  def __init__(self):
+  def __init__(self, sampleManager=None, schemaBuilder=None):
     self.job_id = -1
+    if sampleManager is None:
+      self.sampleManager = defaultSampleManager()
+    else:
+      self.sampleManager = sampleManager
+    if schemaBuilder is None:
+      self.schemaBuilder = defaultschemabuilder.DefaultSchemaBuilder()
+    else:
+      self.schemaBuilder = schemaBuilder
 
   # Study creation functions
-  def createNewJob(self, script, sample, params, sampleManager=None):
+  def createNewJob(self, script, sample, params):
     """
     Create a new job out of those parameters:
     script : script / pyscript type
@@ -89,30 +57,21 @@ class PyStudy:
     self.sample = sample
     self.params = params
     self.params.salome_parameters.job_type = self.jobType()
-    if sampleManager is None:
-      self.sampleManager = defaultSampleManager()
-    else:
-      self.sampleManager = sampleManager
     tmp_workdir = self.params.salome_parameters.result_directory
-    extra_in_files, yacs_schema_path = prepareDirectoryForLaunch(self.sample,
-                                                        tmp_workdir,
-                                                        self.params.nb_branches,
-                                                        script,
-                                                        self.sampleManager)
-    self.params.salome_parameters.in_files.extend(extra_in_files)
-    self.params.salome_parameters.job_file = yacs_schema_path
+    schema_path, extra_files = self._prepareDirectoryForLaunch(tmp_workdir,
+                                                               script)
+
+    self.params.salome_parameters.in_files.extend(extra_files)
+    self.params.salome_parameters.job_file = schema_path
     launcher = salome.naming_service.Resolve('/SalomeLauncher')
     self.job_id = launcher.createJob(self.params.salome_parameters)
     return self.job_id
 
-  def loadFromDirectory(self, path, sampleManager=None):
+  def loadFromDirectory(self, path):
     """
     Recover a study from a result directory where a previous study was launched.
     """
-    if sampleManager is None:
-      sampleManager = defaultSampleManager()
-    self.sampleManager = sampleManager
-    self.sample = sampleManager.loadSample(path)
+    self.sample = self.sampleManager.loadSample(path)
     job_string = loadJobString(path)
     launcher = salome.naming_service.Resolve('/SalomeLauncher')
     self.job_id = launcher.restoreJob(job_string)
@@ -122,14 +81,11 @@ class PyStudy:
       self.getResult()
     return self.job_id
 
-  def loadFromString(self, jobstring, sampleManager=None):
+  def loadFromString(self, jobstring):
     """
     Recover a study from a string which contains the description of the job.
     This string can be obtained by launcher.dumpJob.
     """
-    if sampleManager is None:
-      sampleManager = defaultSampleManager()
-    self.sampleManager = sampleManager
     launcher = salome.naming_service.Resolve('/SalomeLauncher')
     self.job_id = launcher.restoreJob(jobstring)
     self.params = None
@@ -137,26 +93,26 @@ class PyStudy:
     if self.job_id >= 0:
       salome_params = launcher.getJobParameters(self.job_id)
       self.params = parameters.Parameters(salome_parameters=salome_params)
-      self.sample = sampleManager.loadSample(salome_params.result_directory)
+      #TODO: sampleManager should be loaded from result_directory
+      self.sample = self.sampleManager.loadSample(
+                                                 salome_params.result_directory)
       self.getResult()
     else:
       raise Exception("Failed to restore the job.")
 
-  def loadFromId(self, jobid, sampleManager=None):
+  def loadFromId(self, jobid):
     """
     Connect the study to an already created job.
     The result directory of the job must be already prepared for launch.
     """
     if jobid < 0:
       return
-    if sampleManager is None:
-      sampleManager = defaultSampleManager()
-    self.sampleManager = sampleManager
     self.job_id = jobid
     launcher = salome.naming_service.Resolve('/SalomeLauncher')
     salome_params = launcher.getJobParameters(job_id)
     self.params = parameters.Parameters(salome_parameters=salome_params)
-    self.sample = sampleManager.loadSample(salome_params.result_directory)
+    #TODO: sampleManager should be loaded from result_directory
+    self.sample = self.sampleManager.loadSample(salome_params.result_directory)
     self.script = None
     return
 
@@ -305,6 +261,35 @@ For further details, see {}/logs directory on {}.""".format(
       time.sleep(sleep_delay)
       jobState = launcher.getJobState(job_id)
 
+  def _prepareDirectoryForLaunch(self, result_directory, script):
+    """
+    result_directory : path to a result working directory.
+    script : script / pyscript type
+    return:
+      yacs_schema_path: path to the yacs schema (xml file).
+      extra_in_files: list of files to add to salome_parameters.in_files
+    """
+    if not os.path.exists(result_directory):
+      os.makedirs(result_directory)
+    # export sample to result_directory
+    inputFiles = self.sampleManager.prepareRun(self.sample, result_directory)
+
+    # export nbbranches
+    configpath = os.path.join(result_directory, "idefixconfig.json")
+    dicconfig = {}
+    dicconfig["nbbranches"]  = self.params.nb_branches
+    dicconfig["studymodule"] = "idefixstudy"
+    dicconfig["sampleIterator"] = self.sampleManager.getModuleName()
+    with open(configpath, "w") as f:
+      json.dump(dicconfig, f, indent=2)
+    studypath = os.path.join(result_directory, "idefixstudy.py")
+    with open(studypath, "w") as f:
+      f.write(script.script)
+    schema_path, extra_files = self.schemaBuilder.buildSchema(result_directory)
+
+    extra_files.extend([configpath, studypath])
+    extra_files.extend(inputFiles)
+    return schema_path, extra_files
 
 ### Deprecated!!!!
 def dumpJob(result_directory, jobString):

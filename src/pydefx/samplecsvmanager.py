@@ -28,10 +28,9 @@ class SampleManager:
   def __init__(self):
     pass
 
-  def prepareRun(self, script, sample, directory):
+  def prepareRun(self, sample, directory):
     """
     Create a dump of the sample in the given directory.
-    script: PyScript object.
     sample: Sample object.
     directory: path to a local working directory where all the working files are
                copied. This directory should be already created.
@@ -47,7 +46,7 @@ class SampleManager:
 
     outnamespath = os.path.join(directory, SampleIterator.OUTPUTNAMESFILE)
     with open(outnamespath, 'w') as outputfile:
-      for v in script.getOutputNames():
+      for v in sample.getOutputNames():
         outputfile.write(v+'\n')
     filename = inspect.getframeinfo(inspect.currentframe()).filename
     install_directory = pathlib.Path(filename).resolve().parent

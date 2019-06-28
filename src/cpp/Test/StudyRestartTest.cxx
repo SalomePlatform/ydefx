@@ -45,6 +45,7 @@ void SampleTest::studyTest()
   {
     ydefx::JobParametersProxy jobParams;
     jobParams.configureResource("localhost");
+    jobParams.work_directory(jobParams.work_directory() + "/RestartTest");
     jobParams.createResultDirectory("/tmp");
 
     std::string pyScript = 

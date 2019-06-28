@@ -47,10 +47,10 @@ class Sample:
                       #        None = point not evaluated,
                       #          "" = results available, no error
                       # "any string"= error message for that index.
-  
+
   def __iter__(self):
     return Dico_iter(self._input)
-  
+
   def inputIterator(self):
     """
     Iterate over input values.
@@ -117,7 +117,6 @@ class Sample:
         foundId = curId
         break
     return foundId
-    
 
   def isValidId(self, idToCheck, inputToCheck):
     """

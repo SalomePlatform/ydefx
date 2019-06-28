@@ -41,11 +41,13 @@ void SampleTest::fullStudy()
 
     ydefx::JobParametersProxy jobParams;
     jobParams.configureResource("localhost");
+    jobParams.work_directory(jobParams.work_directory() + "/GeneralTest");
     jobParams.createResultDirectory("/tmp");
     std::string pyScript = 
 "def _exec(a, b):\n"
 "  d = a / b\n"
-"  return d\n";
+"  t = ['object which needs pickel protocol']\n"
+"  return d,t\n";
 
     ydefx::PyStudyFunction studyFunction;
     studyFunction.loadString(pyScript);
@@ -56,13 +58,16 @@ void SampleTest::fullStudy()
     const std::list<std::string>& outputs = studyFunction.outputNames();
     CPPUNIT_ASSERT(std::find(outputs.begin(), outputs.end(), "d")
                                                               != outputs.end());
-    
-    ydefx::Sample<double> sample;
+    CPPUNIT_ASSERT(std::find(outputs.begin(), outputs.end(), "t")
+                                                              != outputs.end());
+
+    ydefx::Sample<double, py2cpp::PyPtr > sample;
     std::vector<double> a_vals = {1.1, 4.4, 9, 4};
     std::vector<double> b_vals = {1.1, 2.2, 3, 1};
     sample.inputs<double>().set("a", a_vals);
     sample.inputs<double>().set("b", b_vals);
     sample.outputs<double>().addName("d");
+    sample.outputs<py2cpp::PyPtr >().addName("t");
 
     ydefx::Launcher l;
     ydefx::Job* myJob = l.submitMonoPyJob(studyFunction, sample, jobParams);
@@ -90,6 +95,10 @@ void SampleTest::fullStudy()
     std::vector<double> expectedResult = {1,2,3,4};
     const std::vector<double>& result = sample.outputs<double>().get("d");
     CPPUNIT_ASSERT(expectedResult == result);
+    const std::vector<py2cpp::PyPtr>& pyobjResult
+                                     = sample.outputs<py2cpp::PyPtr>().get("t");
+    for(const py2cpp::PyPtr& obj : pyobjResult)
+      CPPUNIT_ASSERT(obj.repr() == "['object which needs pickel protocol']");
     delete myJob;
   }
   Py_Finalize();

@@ -20,10 +20,8 @@
 #define YDEFX_TMONOPYJOB_HXX
 #include "JobParametersProxy.hxx"
 #include "MonoPyJob.hxx"
-#include "Sample.hxx"
 #include "SamplePyConversions.hxx"
 #include "PyStudyFunction.hxx"
-#include <py2cpp/py2cpp.hxx>
 
 namespace ydefx
 {

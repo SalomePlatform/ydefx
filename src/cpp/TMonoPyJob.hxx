@@ -58,7 +58,7 @@ public:
   : MonoPyJob()
   , _sample(sample)
   {
-    if(_lastError.empty()) // no errors during parent contruction
+    if(_lastError.empty()) // no errors during parent construction
     {
       try
       {

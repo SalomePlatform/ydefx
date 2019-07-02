@@ -38,13 +38,12 @@ class myalgosync(SALOMERuntime.OptimizerAlgSync):
     """Start to fill the pool with samples to evaluate."""
     itModuleName = self.config["sampleIterator"]
     itModule = importlib.import_module(itModuleName)
-    self.manager = itModule.SampleManager()
-    self.iterator = self.manager.initInputIterator()
+    self.manager = itModule.SampleIterator()
     self.manager.writeHeaders()
     values=None
     for i in range(0, self.getNbOfBranches()):
       try:
-        newid, values = next(self.iterator)
+        newid, values = next(self.manager)
         self.pool.pushInSample(newid, pickle.dumps(values, protocol=0).decode())
       except StopIteration:
         pass
@@ -61,7 +60,7 @@ class myalgosync(SALOMERuntime.OptimizerAlgSync):
     error,result = pickle.loads(resultbyte)
     self.manager.addResult(currentId, sample, result, error)
     try:
-      newid, values = next(self.iterator)
+      newid, values = next(self.manager)
       self.pool.pushInSample(newid, pickle.dumps(values, protocol=0).decode())
     except StopIteration:
       pass

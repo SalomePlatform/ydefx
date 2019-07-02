@@ -71,7 +71,7 @@ class PyStudy:
     """
     Recover a study from a result directory where a previous study was launched.
     """
-    self.sample = self.sampleManager.loadSample(path)
+    self.sample = self.sampleManager.restoreSample(path)
     job_string = loadJobString(path)
     launcher = salome.naming_service.Resolve('/SalomeLauncher')
     self.job_id = launcher.restoreJob(job_string)
@@ -94,7 +94,7 @@ class PyStudy:
       salome_params = launcher.getJobParameters(self.job_id)
       self.params = parameters.Parameters(salome_parameters=salome_params)
       #TODO: sampleManager should be loaded from result_directory
-      self.sample = self.sampleManager.loadSample(
+      self.sample = self.sampleManager.restoreSample(
                                                  salome_params.result_directory)
       self.getResult()
     else:
@@ -112,7 +112,7 @@ class PyStudy:
     salome_params = launcher.getJobParameters(job_id)
     self.params = parameters.Parameters(salome_parameters=salome_params)
     #TODO: sampleManager should be loaded from result_directory
-    self.sample = self.sampleManager.loadSample(salome_params.result_directory)
+    self.sample=self.sampleManager.restoreSample(salome_params.result_directory)
     self.script = None
     return
 

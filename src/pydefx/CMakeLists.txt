@@ -23,6 +23,7 @@ SET(SCRIPTS
   pyscript.py
   pystudy.py
   sample.py
+  samplecsviterator.py
   samplecsvmanager.py
   defaultschemabuilder.py
   )

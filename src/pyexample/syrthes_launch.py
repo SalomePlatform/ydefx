@@ -37,4 +37,5 @@ myStudy = pydefix.PyStudy(myScript, mySample, myParams)
 myStudy.run()
 
 print(myStudy.getJobState())
-print(myStudy.getResult().progressRate())
+print(myStudy.getResult())
+print(myStudy.getProgress())

@@ -27,6 +27,8 @@ from . import samplecsvmanager
 from . import parameters
 from . import configuration
 from . import defaultschemabuilder
+from .studyexception import StudyUseException, StudyRunException
+from .studyresult import StudyResult
 
 def defaultSampleManager():
   return samplecsvmanager.SampleManager()
@@ -35,6 +37,7 @@ class PyStudy:
   JOB_DUMP_NAME = "jobDump.xml"
   def __init__(self, sampleManager=None, schemaBuilder=None):
     self.job_id = -1
+    self.global_result = StudyResult()
     if sampleManager is None:
       self.sampleManager = defaultSampleManager()
     else:
@@ -98,7 +101,7 @@ class PyStudy:
                                                  salome_params.result_directory)
       self.getResult()
     else:
-      raise Exception("Failed to restore the job.")
+      raise StudyRunException("Failed to restore the job.")
 
   def loadFromId(self, jobid):
     """
@@ -140,7 +143,7 @@ class PyStudy:
     The job should have been already created.
     """
     if self.job_id < 0 :
-      raise Exception("Nothing to launch! Job is not created!")
+      raise StudyUseException("Nothing to launch! Job is not created!")
     tmp_workdir = self.params.salome_parameters.result_directory
     # run the job
     launcher = salome.naming_service.Resolve('/SalomeLauncher')
@@ -156,9 +159,11 @@ class PyStudy:
     Try to get the result file and if it was possible the results are loaded in
     the sample.
     An exception may be thrown if it was not possible to get the file.
+    Return a StudyResult object.
     """
+    self.global_result = StudyResult()
     if self.job_id < 0 :
-      raise Exception("Cannot get the results if the job is not created!")
+      raise StudyUseException("Cannot get the results if the job is not created!")
     launcher = salome.naming_service.Resolve('/SalomeLauncher')
     state = launcher.getJobState(self.job_id)
     tmp_workdir = self.params.salome_parameters.result_directory
@@ -166,7 +171,7 @@ class PyStudy:
     errorIfNoResults = False
     errorMessage = ""
     if state == "CREATED" :
-      raise Exception("Cannot get the results if the job is not launched!")
+      raise StudyUseException("Cannot get the results if the job is not launched!")
     elif state ==  "QUEUED" or state == "IN_PROCESS":
       # no results available at this point. Try again later! Not an error.
       searchResults = False
@@ -180,6 +185,7 @@ class PyStudy:
           with open(exit_code_file) as myfile:
             exit_code = myfile.read()
             exit_code = exit_code.strip()
+        self.global_result.exit_code = exit_code
         if exit_code == "0" :
           errorIfNoResults = True # we expect to have full results
         else:
@@ -200,7 +206,8 @@ class PyStudy:
                                       self.sampleManager.getResultFileName(),
                                       tmp_workdir):
         try:
-          self.sampleManager.loadResult(self.sample, tmp_workdir)
+          res = self.sampleManager.loadResult(self.sample, tmp_workdir)
+          self.global_result.result = res
         except Exception as err:
           if errorIfNoResults:
             raise err
@@ -213,8 +220,9 @@ For further details, see {}/logs directory on {}.""".format(
                           self.params.salome_parameters.work_directory,
                           self.params.salome_parameters.resource_required.name)
       errorMessage += warningMessage
-      raise Exception(errorMessage)
-    return self.sample
+      self.global_result.error_message = errorMessage
+      raise StudyRunException(errorMessage)
+    return self.global_result
 
   def resultAvailable(self):
     """
@@ -247,7 +255,7 @@ For further details, see {}/logs directory on {}.""".format(
 
   def dump(self):
     if self.job_id < 0 :
-      raise Exception("Cannot dump the job if it is not created!")
+      raise StudyUseException("Cannot dump the job if it is not created!")
     launcher = salome.naming_service.Resolve('/SalomeLauncher')
     return launcher.dumpJob(self.job_id)
 

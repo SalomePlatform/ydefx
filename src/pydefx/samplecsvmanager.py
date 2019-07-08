@@ -78,7 +78,8 @@ class SampleManager:
     """
     The directory should contain a RESULTDIR directory with the result files.
     The results are loaded into the sample.
-    Return the modified sample.
+    Return the global result of the study which can be used by an insitu
+    computation.
     """
     resultdir = os.path.join(directory, SampleIterator.RESULTDIR)
     datapath = os.path.join(resultdir, SampleIterator.RESULTFILE)
@@ -97,10 +98,10 @@ class SampleManager:
           sample.checkId(index, input_vals)
         except Exception as err:
           extraInfo = "Error on processing file {} index number {}:".format(
-                                                datapath,       str(index))
+                                                datapath, str(index))
           raise Exception(extraInfo + str(err))
         sample.addResult(index, output_vals, elt[SampleIterator.ERRORCOLUMN])
-    return sample
+    return None
 
   def restoreSample(self, directory):
     """ The directory should contain the files created by prepareRun. A new

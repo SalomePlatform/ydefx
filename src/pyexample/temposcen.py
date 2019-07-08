@@ -33,4 +33,7 @@ myStudy.createNewJob(myScript, mySample, myParams)
 myStudy.launch()
 
 print(myStudy.getJobState())
-print(myStudy.getResult().progressRate())
+print(myStudy.getResult())
+print(myStudy.sample)
+print(myStudy.global_result)
+print(myStudy.getProgress())

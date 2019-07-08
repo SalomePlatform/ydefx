@@ -26,6 +26,8 @@ SET(SCRIPTS
   samplecsviterator.py
   samplecsvmanager.py
   defaultschemabuilder.py
+  studyexception.py
+  studyresult.py
   )
 
 INSTALL(FILES ${SCRIPTS} DESTINATION ${SALOME_INSTALL_PYTHON}/pydefx)

@@ -16,17 +16,17 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-import salome
+from . import salome_proxy
 import tempfile
 import pathlib
 
 def defaultWorkingDir(resource):
-  resManager= salome.lcc.getResourcesManager()
+  resManager = salome_proxy.getResourcesManager()
   resource_definition = resManager.GetResourceDefinition(resource)
   return resource_definition.working_directory
 
 def defaultNbBranches(resource):
-  resManager= salome.lcc.getResourcesManager()
+  resManager = salome_proxy.getResourcesManager()
   resource_definition = resManager.GetResourceDefinition(resource)
   ret = resource_definition.nb_node
   if ret < 1:
@@ -50,7 +50,7 @@ def defaultWckey(resource="localhost"):
   return result
 
 def availableResources():
-  resManager = salome.lcc.getResourcesManager()
-  params     = salome.ResourceParameters()
+  resManager = salome_proxy.getResourcesManager()
+  params     = salome_proxy.createSalomeParameters().resource_required
   params.can_launch_batch_jobs = True
   return resManager.GetFittingResources(params)

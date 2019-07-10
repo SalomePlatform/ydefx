@@ -21,8 +21,8 @@ import inspect
 import pathlib
 import tempfile
 import os
-import salome
 import json
+from . import salome_proxy
 from . import samplecsvmanager
 from . import parameters
 from . import configuration
@@ -63,10 +63,13 @@ class PyStudy:
     tmp_workdir = self.params.salome_parameters.result_directory
     schema_path, extra_files = self._prepareDirectoryForLaunch(tmp_workdir,
                                                                script)
-
-    self.params.salome_parameters.in_files.extend(extra_files)
+    # this list manipulation is needed because in_files is not a python list
+    # if we don't use a salome session. In that case swig uses a python tuple
+    # in order to map a std::list as a parameter of a structure.
+    in_files_as_list = list(self.params.salome_parameters.in_files)
+    self.params.salome_parameters.in_files = in_files_as_list + extra_files
     self.params.salome_parameters.job_file = schema_path
-    launcher = salome.naming_service.Resolve('/SalomeLauncher')
+    launcher = salome_proxy.getLauncher()
     self.job_id = launcher.createJob(self.params.salome_parameters)
     return self.job_id
 
@@ -76,7 +79,7 @@ class PyStudy:
     """
     self.sample = self.sampleManager.restoreSample(path)
     job_string = loadJobString(path)
-    launcher = salome.naming_service.Resolve('/SalomeLauncher')
+    launcher = salome_proxy.getLauncher()
     self.job_id = launcher.restoreJob(job_string)
     if job_id >= 0:
       salome_params = launcher.getJobParameters(job_id)
@@ -89,7 +92,7 @@ class PyStudy:
     Recover a study from a string which contains the description of the job.
     This string can be obtained by launcher.dumpJob.
     """
-    launcher = salome.naming_service.Resolve('/SalomeLauncher')
+    launcher = salome_proxy.getLauncher()
     self.job_id = launcher.restoreJob(jobstring)
     self.params = None
     self.sample = None
@@ -111,7 +114,7 @@ class PyStudy:
     if jobid < 0:
       return
     self.job_id = jobid
-    launcher = salome.naming_service.Resolve('/SalomeLauncher')
+    launcher = salome_proxy.getLauncher()
     salome_params = launcher.getJobParameters(job_id)
     self.params = parameters.Parameters(salome_parameters=salome_params)
     #TODO: sampleManager should be loaded from result_directory
@@ -146,7 +149,7 @@ class PyStudy:
       raise StudyUseException("Nothing to launch! Job is not created!")
     tmp_workdir = self.params.salome_parameters.result_directory
     # run the job
-    launcher = salome.naming_service.Resolve('/SalomeLauncher')
+    launcher = salome_proxy.getLauncher()
     launcher.launchJob(self.job_id)
     #save the job
     job_string = launcher.dumpJob(self.job_id)
@@ -164,7 +167,7 @@ class PyStudy:
     self.global_result = StudyResult()
     if self.job_id < 0 :
       raise StudyUseException("Cannot get the results if the job is not created!")
-    launcher = salome.naming_service.Resolve('/SalomeLauncher')
+    launcher = salome_proxy.getLauncher()
     state = launcher.getJobState(self.job_id)
     tmp_workdir = self.params.salome_parameters.result_directory
     searchResults = False
@@ -240,7 +243,7 @@ For further details, see {}/logs directory on {}.""".format(
   def getJobState(self):
     if self.job_id < 0:
       return "NOT_CREATED"
-    launcher = salome.naming_service.Resolve('/SalomeLauncher')
+    launcher = salome_proxy.getLauncher()
     return launcher.getJobState(self.job_id)
 
   def getProgress(self):
@@ -256,12 +259,12 @@ For further details, see {}/logs directory on {}.""".format(
   def dump(self):
     if self.job_id < 0 :
       raise StudyUseException("Cannot dump the job if it is not created!")
-    launcher = salome.naming_service.Resolve('/SalomeLauncher')
+    launcher = salome_proxy.getLauncher()
     return launcher.dumpJob(self.job_id)
 
   def wait(self, sleep_delay=10):
     """ Wait for the end of the job """
-    launcher = salome.naming_service.Resolve('/SalomeLauncher')
+    launcher = salome_proxy.getLauncher()
     job_id = self.job_id
     jobState = launcher.getJobState(job_id)
     import time

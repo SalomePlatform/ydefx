@@ -22,5 +22,4 @@ from .pystudy import PyStudy
 from .sample import Sample
 from .defaultschemabuilder import DefaultSchemaBuilder
 
-import salome
-salome.salome_init()
+from .salome_proxy import forceSalomeServers, forceNoSalomeServers

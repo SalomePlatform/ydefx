@@ -28,6 +28,7 @@ SET(SCRIPTS
   defaultschemabuilder.py
   studyexception.py
   studyresult.py
+  salome_proxy.py
   )
 
 INSTALL(FILES ${SCRIPTS} DESTINATION ${SALOME_INSTALL_PYTHON}/pydefx)

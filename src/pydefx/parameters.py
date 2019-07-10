@@ -17,17 +17,16 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-import salome
-from . import configuration
 import tempfile
+from . import salome_proxy
+from . import configuration
 
 class Parameters:
   def __init__(self, resource="localhost",
                nb_branches=None, salome_parameters=None):
     if salome_parameters is None :
-      job_params = salome.JobParameters()
+      job_params = salome_proxy.createSalomeParameters()
       job_params.job_type = "yacs_file"
-      job_params.resource_required = salome.ResourceParameters()
       job_params.resource_required.name = resource
       job_params.job_name = "idefix_job"
       job_params.wckey = configuration.defaultWckey(resource)

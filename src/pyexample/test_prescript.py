@@ -1,5 +1,6 @@
 import unittest
 import os
+import time
 
 class TestYdefx(unittest.TestCase):
   def test_prescript(self):
@@ -12,7 +13,8 @@ class TestYdefx(unittest.TestCase):
     myParams = pydefx.Parameters()
     myParams.configureResource("localhost")
     mywd = os.path.join(myParams.salome_parameters.work_directory,
-                        "prescript_test")
+                        "prescript_test" +
+                        time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime()))
     myParams.salome_parameters.work_directory = mywd
     myParams.createResultDirectory("/tmp")
 

@@ -1,13 +1,19 @@
 import unittest
+import os
 
 class TestYdefx(unittest.TestCase):
   def test_prescript(self):
     """
+    This test shows how to use an initialization script which is called one time
+    before any evaluation of the study function.
     """
     import pydefx
 
     myParams = pydefx.Parameters()
     myParams.configureResource("localhost")
+    mywd = os.path.join(myParams.salome_parameters.work_directory,
+                        "prescript_test")
+    myParams.salome_parameters.work_directory = mywd
     myParams.createResultDirectory("/tmp")
 
     pyScript = """

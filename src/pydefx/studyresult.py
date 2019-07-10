@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (C) 2019  EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -17,18 +18,37 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-# For salome test
-IF(SALOME_BUILD_TESTS)
-  INSTALL(FILES CTestTestfileInstall.cmake
-          DESTINATION ${SALOME_YDEFX_INSTALL_TEST}
-          RENAME CTestTestfile.cmake)
-ENDIF(SALOME_BUILD_TESTS)
+class StudyResult:
+  """
+  This class gathers global information about the execution of the study (global
+  errors, global result).
+  """
+  def __init__(self):
+    self.result = None
+    self.exit_code = None
+    self.error_message = None
 
-ADD_SUBDIRECTORY(cpp)
-ADD_SUBDIRECTORY(pydefx)
-IF(YDEFX_BUILD_GUI)
-  ADD_SUBDIRECTORY(gui)
-ENDIF(YDEFX_BUILD_GUI)
-IF(SALOME_BUILD_TESTS)
-  ADD_SUBDIRECTORY(pyexample)
-ENDIF(SALOME_BUILD_TESTS)
+  def isExitCodeAvailable(self):
+    return not self.exit_code is None
+
+  def getExitCode(self):
+    return self.exit_code
+
+  def isResultAvailable(self):
+    return not self.exit_code is None
+
+  def getResult(self):
+    return self.result
+
+  def hasErrors(self):
+    return not self.error_message is None and len(self.error_message) > 0
+
+  def getErrors(self):
+    return self.error_message
+
+  def __str__(self):
+    result = """Exit code : {}
+Error message : {}
+Result:
+{}""".format(self.exit_code, self.error_message, self.result)
+    return result

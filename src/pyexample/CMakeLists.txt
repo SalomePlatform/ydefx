@@ -16,19 +16,26 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-
-# For salome test
+ADD_TEST(YdefxPyExampleTest runUnitTest.sh)
+SET_TESTS_PROPERTIES(YdefxPyExampleTest PROPERTIES ENVIRONMENT
+                    "PYTHONPATH=${CMAKE_SOURCE_DIR}/src:$ENV{PYTHONPATH}")
 IF(SALOME_BUILD_TESTS)
+  # For salome test
+  SET(LOCAL_TEST_DIR ${SALOME_YDEFX_INSTALL_TEST}/pyexample)
+  SET(TESTFILES
+  test_insitu.py
+  test_prescript.py
+  )
+  INSTALL(FILES ${TESTFILES} DESTINATION ${LOCAL_TEST_DIR})
+  INSTALL(PROGRAMS runUnitTest.sh
+         DESTINATION ${LOCAL_TEST_DIR})
+  SET(INSITU_TESTFILES
+  insitu/insituiterator.py
+  insitu/insitumanager.py
+  )
+  INSTALL(FILES ${INSITU_TESTFILES} DESTINATION ${LOCAL_TEST_DIR}/insitu)
+  
   INSTALL(FILES CTestTestfileInstall.cmake
-          DESTINATION ${SALOME_YDEFX_INSTALL_TEST}
+          DESTINATION ${LOCAL_TEST_DIR}
           RENAME CTestTestfile.cmake)
-ENDIF(SALOME_BUILD_TESTS)
-
-ADD_SUBDIRECTORY(cpp)
-ADD_SUBDIRECTORY(pydefx)
-IF(YDEFX_BUILD_GUI)
-  ADD_SUBDIRECTORY(gui)
-ENDIF(YDEFX_BUILD_GUI)
-IF(SALOME_BUILD_TESTS)
-  ADD_SUBDIRECTORY(pyexample)
-ENDIF(SALOME_BUILD_TESTS)
+ENDIF()

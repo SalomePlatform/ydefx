@@ -24,4 +24,5 @@ SET(TIMEOUT        500)
 
 SUBDIRS(
     cpp
+    pyexample
     )

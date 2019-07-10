@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (C) 2019  EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -17,18 +18,24 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-# For salome test
-IF(SALOME_BUILD_TESTS)
-  INSTALL(FILES CTestTestfileInstall.cmake
-          DESTINATION ${SALOME_YDEFX_INSTALL_TEST}
-          RENAME CTestTestfile.cmake)
-ENDIF(SALOME_BUILD_TESTS)
+class StudyException(Exception):
+  """
+  Root of exceptions raised by a study.
+  """
+  def __init__(self, message):
+    super().__init__(message)
 
-ADD_SUBDIRECTORY(cpp)
-ADD_SUBDIRECTORY(pydefx)
-IF(YDEFX_BUILD_GUI)
-  ADD_SUBDIRECTORY(gui)
-ENDIF(YDEFX_BUILD_GUI)
-IF(SALOME_BUILD_TESTS)
-  ADD_SUBDIRECTORY(pyexample)
-ENDIF(SALOME_BUILD_TESTS)
+class StudyUseException(StudyException):
+  """
+  Exception used when there is a bad utilisation of the study - functions called
+  in a wrong order.
+  """
+  def __init__(self, message):
+    super().__init__(message)
+
+class StudyRunException(StudyException):
+  """
+  Exception used when there is a problem when running the study.
+  """
+  def __init__(self, message):
+    super().__init__(message)

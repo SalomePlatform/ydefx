@@ -41,10 +41,12 @@ class SampleIterator:
     if directory:
       datapath = os.path.join(directory, SampleIterator.DATAFILE)
       outputnamespath = os.path.join(directory, SampleIterator.OUTPUTNAMESFILE)
+      self.result_directory = os.path.join(directory, SampleIterator.RESULTDIR)
       self.directory = directory
     else:
       datapath = SampleIterator.DATAFILE
       outputnamespath = SampleIterator.OUTPUTNAMESFILE
+      self.result_directory = SampleIterator.RESULTDIR
       self.directory = None
     self.result_file = None
     self.datafile = open(datapath, newline='')
@@ -67,14 +69,12 @@ class SampleIterator:
     result file.
     """
     if self.directory:
-      resultdir = os.path.join(self.directory, SampleIterator.RESULTDIR)
       outputnamespath = os.path.join(self.directory,
                                      SampleIterator.OUTPUTNAMESFILE)
     else:
-      resultdir = SampleIterator.RESULTDIR
       outputnamespath = SampleIterator.OUTPUTNAMESFILE
-    os.makedirs(resultdir, exist_ok=True)
-    resultpath = os.path.join(resultdir, SampleIterator.RESULTFILE)
+    os.makedirs(self.result_directory, exist_ok=True)
+    resultpath = os.path.join(self.result_directory, SampleIterator.RESULTFILE)
     result_columns = [SampleIterator.IDCOLUMN]
     result_columns.extend(self.inputnames)
     result_columns.extend(self.outputnames)
@@ -132,7 +132,6 @@ class SampleIterator:
     if not self.result_file is None:
       self.result_file.close()
       self.result_file = None
-
 
 # Private functions
 def _loadOutputNames(filepath):

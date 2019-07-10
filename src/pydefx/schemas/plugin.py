@@ -6,6 +6,7 @@ import importlib
 class myalgosync(SALOMERuntime.OptimizerAlgSync):
   def __init__(self):
     SALOMERuntime.OptimizerAlgSync.__init__(self, None)
+    self.started = False
 
   def setPool(self,pool):
     """Must be implemented to set the pool"""
@@ -38,6 +39,7 @@ class myalgosync(SALOMERuntime.OptimizerAlgSync):
     """Start to fill the pool with samples to evaluate."""
     itModuleName = self.config["sampleIterator"]
     itModule = importlib.import_module(itModuleName)
+    self.started = True
     self.manager = itModule.SampleIterator()
     self.manager.writeHeaders()
     values=None
@@ -68,13 +70,9 @@ class myalgosync(SALOMERuntime.OptimizerAlgSync):
   def finish(self):
     """Optional method called when the algorithm has finished, successfully
        or not, to perform any necessary clean up."""
-    # We need a try catch because finish is also called at the beginning of
-    # the algorthm, before any other call.
-    try:
+    if self.started :
       self.manager.terminate()
-    except:
-      pass
-    self.pool.destroyAll()
+      self.pool.destroyAll()
 
   def getAlgoResult(self):
     """return the result of the algorithm.

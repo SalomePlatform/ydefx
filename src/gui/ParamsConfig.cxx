@@ -135,6 +135,7 @@ ParamsConfigWidget::ParamsConfigWidget(ydefx::JobParametersProxy& model,
   label = new QLabel(tr("Extra parameters:"));
   mainLayout->addWidget(label);
   _extraEdit = new QTextEdit;
+  _extraEdit->setText(_model.extra_params().c_str());
   mainLayout->addWidget(_extraEdit);
   connect(_extraEdit, SIGNAL(textChanged()),
           this, SLOT(updateExtraParams()));

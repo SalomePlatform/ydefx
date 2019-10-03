@@ -42,6 +42,11 @@ def getResourcesManager():
       _resourceManager = salome.lcc.getResourcesManager()
     else:
       catalog_path = os.environ.get("USER_CATALOG_RESOURCES_FILE", "")
+      if not os.path.isfile(catalog_path):
+        salome_path = os.environ.get("ROOT_SALOME_INSTALL", "")
+        catalog_path = os.path.join(salome_path, "CatalogResources.xml")
+      if not os.path.isfile(catalog_path):
+        catalog_path = ""
       _resourceManager = pylauncher.ResourcesManager_cpp(catalog_path)
   return _resourceManager
 

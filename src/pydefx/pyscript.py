@@ -89,7 +89,7 @@ class PyScript:
     error_string = ""
     if len(self.errors) > 0:
       error_string = "global errors:\n"
-      error_string += '\n'.join(errors)
+      error_string += '\n'.join(self.errors)
     else:
       properties = self.getFunctionProperties(fname)
       if properties is None:

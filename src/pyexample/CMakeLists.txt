@@ -25,6 +25,7 @@ IF(SALOME_BUILD_TESTS)
   SET(TESTFILES
   test_insitu.py
   test_prescript.py
+  test_default.py
   )
   INSTALL(FILES ${TESTFILES} DESTINATION ${LOCAL_TEST_DIR})
   INSTALL(PROGRAMS runUnitTest.sh

@@ -30,7 +30,6 @@ def createSalomeParameters():
     result.resource_required = salome.ResourceParameters()
   else:
     result = pylauncher.JobParameters_cpp()
-    result.resource_required = pylauncher.resourceParams()
   return result
 
 _resourceManager = None

@@ -51,6 +51,6 @@ def defaultWckey(resource="localhost"):
 
 def availableResources():
   resManager = salome_proxy.getResourcesManager()
-  params     = salome_proxy.createSalomeParameters().resource_required
-  params.can_launch_batch_jobs = True
-  return resManager.GetFittingResources(params)
+  params     = salome_proxy.createSalomeParameters()
+  params.resource_required.can_launch_batch_jobs = True
+  return resManager.GetFittingResources(params.resource_required)

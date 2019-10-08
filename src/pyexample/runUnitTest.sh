@@ -18,6 +18,6 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-python3 -m unittest test_insitu.py test_prescript.py
+python3 -m unittest test_insitu.py test_prescript.py test_default.py
 ret=$?
 exit $ret

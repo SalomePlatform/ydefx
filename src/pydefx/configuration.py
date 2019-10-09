@@ -50,7 +50,10 @@ def defaultWckey(resource="localhost"):
   return result
 
 def availableResources():
+  """ Return the list of resources defined in the current catalog."""
   resManager = salome_proxy.getResourcesManager()
   params     = salome_proxy.createSalomeParameters()
   params.resource_required.can_launch_batch_jobs = True
-  return resManager.GetFittingResources(params.resource_required)
+  # GetFittingResources returns a tuple if in no salome session mode.
+  # Force to list for uniformity between the two modes.
+  return list(resManager.GetFittingResources(params.resource_required))

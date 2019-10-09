@@ -34,4 +34,21 @@ ADD_TEST(${TEST_NAME} python ${SALOME_TEST_DRIVER} ${TIMEOUT} ./StudyRestartTest
 SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES
                                   LABELS "${COMPONENT_NAME}"
                     )
-                    
+
+SET(TEST_NAME ${COMPONENT_NAME}_NoSession_SampleTest)
+ADD_TEST(${TEST_NAME} ./SampleTest)
+SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES
+                                  LABELS "${COMPONENT_NAME}"
+                    )
+
+SET(TEST_NAME ${COMPONENT_NAME}_NoSession_StudyGeneralTest)
+ADD_TEST(${TEST_NAME} ./StudyGeneralTest)
+SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES
+                                  LABELS "${COMPONENT_NAME}"
+                    )
+
+SET(TEST_NAME ${COMPONENT_NAME}_NoSession_StudyRestartTest)
+ADD_TEST(${TEST_NAME} ./StudyRestartTest)
+SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES
+                                  LABELS "${COMPONENT_NAME}"
+                    )

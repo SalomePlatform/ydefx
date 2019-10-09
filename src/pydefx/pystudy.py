@@ -57,6 +57,7 @@ class PyStudy:
     The result directory will contain all the files needed for a launch and a
     job is created but not launched.
     """
+    self._check(script,sample)
     self.sample = sample
     self.params = params
     self.params.salome_parameters.job_type = self.jobType()
@@ -301,6 +302,19 @@ For further details, see {}/logs directory on {}.""".format(
     extra_files.extend([configpath, studypath])
     extra_files.extend(inputFiles)
     return schema_path, extra_files
+
+  def _check(self, script, sample):
+    "Raise StudyUseException if the sample does not match with the sample."
+    script_params = script.getInputNames()
+    sample_inputs = sample.getInputNames()
+    if len(script_params) < 1:
+      raise StudyUseException("The study function should have at least one parameter. None found.")
+    if len(script_params) != len(sample_inputs):
+      m="The study function should have the same number of parameters as the input variables in the sample ({} != {})."
+      raise StudyUseException(m.format(len(script_params), len(sample_inputs)))
+    for nm in script_params:
+      if nm not in sample_inputs:
+        raise StudyUseException("Parameter {} not found in the sample.".format(nm))
 
 ### Deprecated!!!!
 def dumpJob(result_directory, jobString):

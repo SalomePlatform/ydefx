@@ -100,6 +100,15 @@ void SampleTest::fullStudy()
     for(const py2cpp::PyPtr& obj : pyobjResult)
       CPPUNIT_ASSERT(obj.repr() == "['object which needs pickel protocol']");
     delete myJob;
+
+    // test a case of error
+    std::string wrongScript = "wrong 'script";
+    ydefx::PyStudyFunction wrongStudy;
+    wrongStudy.loadString(wrongScript);
+    CPPUNIT_ASSERT(!wrongStudy.isValid());
+    myJob = l.submitMonoPyJob(wrongStudy, sample, jobParams);
+    CPPUNIT_ASSERT(myJob == nullptr);
+    CPPUNIT_ASSERT(l.lastError().find("SyntaxError") != std::string::npos);
   }
   Py_Finalize();
 }

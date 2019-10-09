@@ -79,6 +79,14 @@ Job* Launcher::submitMonoPyJob(const PyStudyFunction& fnScript,
     return result;
   }
 
+  if(!result->lastError().empty())
+  {
+    _lastError  = result->lastError();
+    delete result;
+    result = nullptr;
+    return result;
+  }
+
   if(!result->launch())
   {
     _lastError = "Failed to submit job.\n";

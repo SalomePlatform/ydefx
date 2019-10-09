@@ -25,7 +25,55 @@ class TestYdefx(unittest.TestCase):
   def test_availableResources(self):
     import pydefx
     lr = pydefx.configuration.availableResources()
-    self.assertIn('localhost', lr) 
+    self.assertIn('localhost', lr)
+
+  def test_invalid_study(self):
+    import pydefx
+    myParams = pydefx.Parameters()
+    myParams.configureResource("localhost")
+    myScript = pydefx.PyScript()
+    myStudy = pydefx.PyStudy()
+
+    myScript.loadString("wrong 'script")
+    mySample = pydefx.Sample([],[])
+    try:
+      myStudy.createNewJob(myScript, mySample, myParams)
+      self.fail("Excpected pydefx.pyscript.PyScriptException!")
+    except pydefx.pyscript.PyScriptException:
+      pass
+    except pydefx.studyexception.StudyException:
+      pass
+
+    script="""
+def _exec():
+  x=5
+  return x
+"""
+    myScript.loadString(script)
+    try:
+      myStudy.createNewJob(myScript, mySample, myParams)
+      self.fail("Excpected pydefx.studyexception.StudyUseException!")
+    except pydefx.studyexception.StudyException:
+      pass
+
+    script="""
+def _exec(a):
+  x=5
+  return x
+"""
+    myScript.loadString(script)
+    try:
+      myStudy.createNewJob(myScript, mySample, myParams)
+      self.fail("Excpected pydefx.studyexception.StudyUseException!")
+    except pydefx.studyexception.StudyException:
+      pass
+
+    mySample = pydefx.Sample(["b"],[])
+    try:
+      myStudy.createNewJob(myScript, mySample, myParams)
+      self.fail("Excpected pydefx.studyexception.StudyUseException!")
+    except pydefx.studyexception.StudyException:
+      pass
 
 if __name__ == '__main__':
     unittest.main()

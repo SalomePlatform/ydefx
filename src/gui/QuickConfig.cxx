@@ -39,9 +39,13 @@ QuickConfigWidget::QuickConfigWidget(ydefx::JobParametersProxy& model,
   connect(resourcesComboBox, SIGNAL(currentIndexChanged( const QString &)),
           this, SLOT(updateResource( const QString &)));
 
+  QPushButton* resetBtn = new QPushButton(tr("Default parameters"));
+  connect(resetBtn,SIGNAL(clicked()),this, SLOT(resetParams()));
+
   QLabel * resourcesLabel = new QLabel(tr("Computing resource:"));
   hLayout->addWidget(resourcesLabel);
   hLayout->addWidget(resourcesComboBox);
+  hLayout->addWidget(resetBtn);
   mainLayout->addLayout(hLayout);
   
   QLabel *nb_branchesLabel = new QLabel(tr("Number of parallel evaluations:"));
@@ -83,7 +87,12 @@ void QuickConfigWidget::updateJobName(const QString& value)
 
 void QuickConfigWidget::updateResource(const QString& value)
 {
-  _model.configureResource(value.toStdString());
+  _model.resource_name(value.toStdString());
+}
+
+void QuickConfigWidget::resetParams()
+{
+  _model.configureResource(_model.resource_name());
   emit defaultNbBranches(_model.nb_branches());
   emit defaultWorkingDir(_model.work_directory().c_str());
   emit defaultWcKey(_model.wckey().c_str());

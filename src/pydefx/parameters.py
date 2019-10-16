@@ -58,3 +58,41 @@ class Parameters:
   def createTmpResultDirectory(self):
     self.salome_parameters.result_directory = configuration.newResultDirectory(
                                                           tempfile.gettempdir())
+
+  # Specific deep copy function is needed because the default one does not work
+  # for swig objects, when we are in no salome session mode.
+  def __deepcopy__(self, memo):
+    cls = self.__class__
+    newobj = cls.__new__(cls)
+    newobj.nb_branches = self.nb_branches
+    newobj.salome_parameters = salome_proxy.createSalomeParameters()
+    newobj.salome_parameters.job_name = self.salome_parameters.job_name
+    newobj.salome_parameters.job_type = self.salome_parameters.job_type
+    newobj.salome_parameters.job_file = self.salome_parameters.job_file
+    newobj.salome_parameters.pre_command = self.salome_parameters.pre_command
+    newobj.salome_parameters.env_file = self.salome_parameters.env_file
+    newobj.salome_parameters.in_files = list(self.salome_parameters.in_files)
+    newobj.salome_parameters.out_files = list(self.salome_parameters.out_files)
+    newobj.salome_parameters.work_directory = self.salome_parameters.work_directory
+    newobj.salome_parameters.local_directory = self.salome_parameters.local_directory
+    newobj.salome_parameters.result_directory = self.salome_parameters.result_directory
+    newobj.salome_parameters.maximum_duration = self.salome_parameters.maximum_duration
+    newobj.salome_parameters.queue = self.salome_parameters.queue
+    newobj.salome_parameters.partition = self.salome_parameters.partition
+    newobj.salome_parameters.exclusive = self.salome_parameters.exclusive
+    newobj.salome_parameters.mem_per_cpu = self.salome_parameters.mem_per_cpu
+    newobj.salome_parameters.wckey = self.salome_parameters.wckey
+    newobj.salome_parameters.extra_params = self.salome_parameters.extra_params
+    newobj.salome_parameters.specific_parameters = self.salome_parameters.specific_parameters
+    newobj.salome_parameters.resource_required.name = self.salome_parameters.resource_required.name
+    newobj.salome_parameters.resource_required.hostname = self.salome_parameters.resource_required.hostname
+    newobj.salome_parameters.resource_required.can_launch_batch_jobs = self.salome_parameters.resource_required.can_launch_batch_jobs
+    newobj.salome_parameters.resource_required.can_run_containers = self.salome_parameters.resource_required.can_run_containers
+    newobj.salome_parameters.resource_required.OS = self.salome_parameters.resource_required.OS
+    newobj.salome_parameters.resource_required.nb_proc = self.salome_parameters.resource_required.nb_proc
+    newobj.salome_parameters.resource_required.mem_mb = self.salome_parameters.resource_required.mem_mb
+    newobj.salome_parameters.resource_required.cpu_clock = self.salome_parameters.resource_required.cpu_clock
+    newobj.salome_parameters.resource_required.nb_node = self.salome_parameters.resource_required.nb_node
+    newobj.salome_parameters.resource_required.nb_proc_per_node = self.salome_parameters.resource_required.nb_proc_per_node
+
+    return newobj

@@ -208,8 +208,6 @@ void SampleTest::params()
 {
   Py_Initialize();
   {
-    try
-    {
     ydefx::JobParametersProxy jpp;
     CPPUNIT_ASSERT(jpp.resource_name() == "localhost");
     CPPUNIT_ASSERT(jpp.job_type() == "yacs_file");
@@ -262,12 +260,53 @@ void SampleTest::params()
     CPPUNIT_ASSERT(jpp.result_directory() == "rd");
     CPPUNIT_ASSERT(jpp.wckey() == "wk");
     CPPUNIT_ASSERT(jpp.work_directory() == "wd");
-    }
-    catch(std::exception& e)
-    {
-      std::cout << e.what();
-      CPPUNIT_FAIL("Unexpected exception!");
-    }
+    // test copy constructor
+    ydefx::JobParametersProxy jpp_2(jpp);
+    CPPUNIT_ASSERT(jpp_2.env_file() == "a");
+    CPPUNIT_ASSERT(jpp_2.exclusive());
+    CPPUNIT_ASSERT(jpp_2.extra_params() == "b");
+    CPPUNIT_ASSERT(jpp_2.job_file() == "c");
+    CPPUNIT_ASSERT(jpp_2.job_name() == "d");
+    CPPUNIT_ASSERT(jpp_2.job_type() == "e");
+    CPPUNIT_ASSERT(jpp_2.local_directory() == "fi");
+    CPPUNIT_ASSERT(jpp_2.maximum_duration() == "dur");
+    CPPUNIT_ASSERT(jpp_2.mem_mb() == 5);
+    CPPUNIT_ASSERT(jpp_2.mem_per_cpu() == 42);
+    CPPUNIT_ASSERT(jpp_2.nb_branches() == 18);
+    CPPUNIT_ASSERT(jpp_2.nb_node() == 15);
+    CPPUNIT_ASSERT(jpp_2.nb_proc() == 13);
+    CPPUNIT_ASSERT(jpp_2.nb_proc_per_node() == 12);
+    CPPUNIT_ASSERT(jpp_2.partition() == "gg");
+    CPPUNIT_ASSERT(jpp_2.pre_command() == "pc");
+    CPPUNIT_ASSERT(jpp_2.queue() == "qq");
+    CPPUNIT_ASSERT(jpp_2.resource_name() == "rn");
+    CPPUNIT_ASSERT(jpp_2.result_directory() == "rd");
+    CPPUNIT_ASSERT(jpp_2.wckey() == "wk");
+    CPPUNIT_ASSERT(jpp_2.work_directory() == "wd");
+    // test copy operator
+    ydefx::JobParametersProxy jpp_3;
+    jpp_3 = jpp;
+    CPPUNIT_ASSERT(jpp_3.env_file() == "a");
+    CPPUNIT_ASSERT(jpp_3.exclusive());
+    CPPUNIT_ASSERT(jpp_3.extra_params() == "b");
+    CPPUNIT_ASSERT(jpp_3.job_file() == "c");
+    CPPUNIT_ASSERT(jpp_3.job_name() == "d");
+    CPPUNIT_ASSERT(jpp_3.job_type() == "e");
+    CPPUNIT_ASSERT(jpp_3.local_directory() == "fi");
+    CPPUNIT_ASSERT(jpp_3.maximum_duration() == "dur");
+    CPPUNIT_ASSERT(jpp_3.mem_mb() == 5);
+    CPPUNIT_ASSERT(jpp_3.mem_per_cpu() == 42);
+    CPPUNIT_ASSERT(jpp_3.nb_branches() == 18);
+    CPPUNIT_ASSERT(jpp_3.nb_node() == 15);
+    CPPUNIT_ASSERT(jpp_3.nb_proc() == 13);
+    CPPUNIT_ASSERT(jpp_3.nb_proc_per_node() == 12);
+    CPPUNIT_ASSERT(jpp_3.partition() == "gg");
+    CPPUNIT_ASSERT(jpp_3.pre_command() == "pc");
+    CPPUNIT_ASSERT(jpp_3.queue() == "qq");
+    CPPUNIT_ASSERT(jpp_3.resource_name() == "rn");
+    CPPUNIT_ASSERT(jpp_3.result_directory() == "rd");
+    CPPUNIT_ASSERT(jpp_3.wckey() == "wk");
+    CPPUNIT_ASSERT(jpp_3.work_directory() == "wd");
   }
   Py_Finalize();
 }

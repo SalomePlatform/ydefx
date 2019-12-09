@@ -64,9 +64,8 @@ class SampleIterator:
 
   def writeHeaders(self):
     """
-    This function can be called after initInputIterator and before the first
-    call to addResult in order to write the names of the parameters in the
-    result file.
+    This function can be called before the first call to addResult in order to
+    write the names of the parameters in the result file.
     """
     if self.directory:
       outputnamespath = os.path.join(self.directory,
@@ -88,8 +87,7 @@ class SampleIterator:
 
   def addResult(self, currentId, currentInput, currentOutput, currentError):
     """
-    You need to call initInputIterator and writeHeaders before the first call
-    of this function.
+    You need to call writeHeaders before the first call of this function.
     currentId : int value
     currentInput : dictionary {"input name":value}
     currentOutput : result returned by _exec.  Can be a tuple, a simple value or

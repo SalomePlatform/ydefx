@@ -6,6 +6,7 @@ data_file_name = "idefixdata.csv"
 study_module = "idefixstudy.py"
 error_result = "idefixerror.txt"
 value_result = "idefixresult.txt"
+traceback_result = "idefixtraceback.txt"
 
 with open(data_file_name, "r") as f:
   values = f.read()
@@ -23,7 +24,9 @@ try:
   result = _exec(**inputvals)
 except Exception as e:
   error=str(e)
-  traceback.print_exc()
+  os.chdir(old_dir) # back to the current case job directory
+  with open(traceback_result, "w") as f:
+    traceback.print_exc(file=f)
 
 os.chdir(old_dir) # back to the current case job directory
 

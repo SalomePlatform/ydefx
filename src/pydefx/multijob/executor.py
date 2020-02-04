@@ -21,7 +21,9 @@ class JobExecutor:
     # Copy the commun files to the root work directory
     params = pydefx.Parameters() # global parameters
     params.loadDict(self.config["params"])
-    # use a fake empty command
+    # use a fake empty command.
+    # Using launcher to copy some files on the remote file system,
+    # without launching a job.
     command = os.path.join(os.getcwd(), "empty.sh")
     open(command, "w").close()
     params.salome_parameters.job_file = command

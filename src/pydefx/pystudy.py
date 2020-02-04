@@ -82,8 +82,8 @@ class PyStudy:
     job_string = loadJobString(path)
     launcher = salome_proxy.getLauncher()
     self.job_id = launcher.restoreJob(job_string)
-    if job_id >= 0:
-      salome_params = launcher.getJobParameters(job_id)
+    if self.job_id >= 0:
+      salome_params = launcher.getJobParameters(self.job_id)
       self.params = parameters.Parameters(salome_parameters=salome_params)
       self.getResult()
     return self.job_id
@@ -317,21 +317,10 @@ For further details, see {}/logs directory on {}.""".format(
         raise StudyUseException("Parameter {} not found in the sample.".format(nm))
 
 ### Deprecated!!!!
-def dumpJob(result_directory, jobString):
-  """
-  Save the jobString to a file into result_directory.
-  result_directory is a string representing a path to a directory.
-  jobString is a string representing the serialization of a job.
-  Use loadJobString for reloading the string saved here.
-  """
-  jobDumpPath = os.path.join(result_directory, PyStudy.JOB_DUMP_NAME)
-  with open(jobDumpPath, "w") as f:
-    f.write(job_string)
-
 def loadJobString(result_directory):
   """
   Return the jobString saved by the dumpJob function into a directory.
-  Use dumpJob for saving a the string.
+  Use dumpJob for saving the string.
   """
   jobDumpPath = os.path.join(result_directory, PyStudy.JOB_DUMP_NAME)
   with open(jobDumpPath, "r") as f:

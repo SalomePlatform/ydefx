@@ -26,6 +26,9 @@ from . import salome_proxy
 
 
 class MultiJobStudy(pystudy.PyStudy):
+  """
+  This study uses one different job for each evaluation.
+  """
   def __init__(self, sampleManager=None, schemaBuilder=None):
     if schemaBuilder is None:
       schemaBuilder = multijobbuilder.MultiJobBuilder()

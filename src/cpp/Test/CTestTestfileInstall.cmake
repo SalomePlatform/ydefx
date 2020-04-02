@@ -18,19 +18,19 @@
 #
 
 SET(TEST_NAME ${COMPONENT_NAME}_SampleTest)
-ADD_TEST(${TEST_NAME} python ${SALOME_TEST_DRIVER} ${TIMEOUT} ./SampleTest)
+ADD_TEST(${TEST_NAME} ${SALOME_TEST_DRIVER} ${TIMEOUT} ./SampleTest)
 SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES
                                   LABELS "${COMPONENT_NAME}"
                     )
 
 SET(TEST_NAME ${COMPONENT_NAME}_StudyGeneralTest)
-ADD_TEST(${TEST_NAME} python ${SALOME_TEST_DRIVER} ${TIMEOUT} ./StudyGeneralTest)
+ADD_TEST(${TEST_NAME} ${SALOME_TEST_DRIVER} ${TIMEOUT} ./StudyGeneralTest)
 SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES
                                   LABELS "${COMPONENT_NAME}"
                     )
 
 SET(TEST_NAME ${COMPONENT_NAME}_StudyRestartTest)
-ADD_TEST(${TEST_NAME} python ${SALOME_TEST_DRIVER} ${TIMEOUT} ./StudyRestartTest)
+ADD_TEST(${TEST_NAME} ${SALOME_TEST_DRIVER} ${TIMEOUT} ./StudyRestartTest)
 SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES
                                   LABELS "${COMPONENT_NAME}"
                     )

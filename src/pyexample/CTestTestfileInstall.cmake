@@ -18,7 +18,7 @@
 #
 
 SET(TEST_NAME ${COMPONENT_NAME}_PyExampleTest)
-ADD_TEST(${TEST_NAME} python ${SALOME_TEST_DRIVER} ${TIMEOUT} ./runUnitTest.sh)
+ADD_TEST(${TEST_NAME} ${SALOME_TEST_DRIVER} ${TIMEOUT} ./runUnitTest.sh)
 SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES
                                   LABELS "${COMPONENT_NAME}"
                     )

@@ -63,9 +63,12 @@ class JobExecutor:
     Create, launch and wait for the end of the job.
     """
     # srun
+    ntasks = self.config["tasksPerEval"]
     pointeval = os.path.join(os.getcwd(), "pointeval.py")
-    command = "srun --ntasks=1 --nodes=1 --chdir={} {} ".format(context.local_dir,
-                                                     pointeval)
+    command = "srun --ntasks={} --nodes=1 --chdir={} {} ".format(
+                                                             str(ntasks),
+                                                             context.local_dir,
+                                                             pointeval)
     return_code = subprocess.call(command, shell=True)
 
   def getResult(self, context):

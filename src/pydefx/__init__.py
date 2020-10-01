@@ -24,4 +24,4 @@ from .defaultschemabuilder import DefaultSchemaBuilder
 
 from .salome_proxy import forceSalomeServers, forceNoSalomeServers
 from .multijobstudy import MultiJobStudy
-from .noyacsstudy import NoYacsStudy
+from .slurmstudy import SlurmStudy

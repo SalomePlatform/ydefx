@@ -21,11 +21,11 @@ import inspect
 import pathlib
 import os
 
-class NoYacsBuilder:
+class SlurmBuilder:
   def __init__(self, executor = None, pointEval = None, mainJob = None):
     filename = inspect.getframeinfo(inspect.currentframe()).filename
     install_root_directory = pathlib.Path(filename).resolve().parent
-    install_files_directory = os.path.join(install_root_directory, "noyacs")
+    install_files_directory = os.path.join(install_root_directory, "slurm")
 
     if executor is None:
       executor = os.path.join(install_files_directory, "executor.py")

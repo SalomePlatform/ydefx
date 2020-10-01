@@ -31,11 +31,11 @@ SET(SCRIPTS
   salome_proxy.py
   multijobbuilder.py
   multijobstudy.py
-  noyacsbuilder.py
-  noyacsstudy.py
+  slurmbuilder.py
+  slurmstudy.py
   )
 
 INSTALL(FILES ${SCRIPTS} DESTINATION ${SALOME_INSTALL_PYTHON}/pydefx)
 ADD_SUBDIRECTORY(schemas)
 ADD_SUBDIRECTORY(multijob)
-ADD_SUBDIRECTORY(noyacs)
+ADD_SUBDIRECTORY(slurm)

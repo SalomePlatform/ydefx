@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 import json
 import importlib
-from multiprocessing.dummy import Pool
+from multiprocessing import Pool
 import traceback
 
 class StartJob:

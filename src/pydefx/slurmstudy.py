@@ -21,14 +21,14 @@ import copy
 import os
 import json
 from . import pystudy
-from . import noyacsbuilder
+from . import slurmbuilder
 from . import salome_proxy
 
 
-class NoYacsStudy(pystudy.PyStudy):
+class SlurmStudy(pystudy.PyStudy):
   def __init__(self, sampleManager=None, schemaBuilder=None):
     if schemaBuilder is None:
-      schemaBuilder = noyacsbuilder.NoYacsBuilder()
+      schemaBuilder = slurmbuilder.SlurmBuilder()
     super().__init__(sampleManager, schemaBuilder)
 
   def createNewJob(self, script, sample, params):
@@ -56,6 +56,8 @@ class NoYacsStudy(pystudy.PyStudy):
     dicconfig["studymodule"] = "idefixstudy"
     dicconfig["sampleIterator"] = self.sampleManager.getModuleName()
     dicconfig["plugin"] = self.schemaBuilder.getPluginName()
+    nbproc = self.params.salome_parameters.resource_required.nb_proc
+    dicconfig["tasksPerEval"] = nbproc // self.params.nb_branches
     with open(configpath, "w") as f:
       json.dump(dicconfig, f, indent=2)
     studypath = os.path.join(result_directory, "idefixstudy.py")

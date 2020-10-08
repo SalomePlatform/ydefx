@@ -193,9 +193,9 @@ class PyStudy:
         if exit_code == "0" :
           errorIfNoResults = True # we expect to have full results
         else:
-          errorMessage = "An error occured during the execution of the YACS schema."
+          errorMessage = "An error occured during the execution of the job."
       else:
-        errorMessage = "Failed to get the exit code of the YACS schema execution."
+        errorMessage = "Failed to get the exit code of the job."
 
     elif state == "RUNNING" or state == "PAUSED" or state == "ERROR" :
       # partial results may be available

@@ -21,7 +21,12 @@ from .pyscript import PyScript
 from .pystudy import PyStudy
 from .sample import Sample
 from .defaultschemabuilder import DefaultSchemaBuilder
+from .allpurposebuilder import AllPurposeBuilder
+from .localbuilder import LocalBuilder
+from .multijobbuilder import MultiJobBuilder
+from .slurmbuilder import SlurmBuilder
 
 from .salome_proxy import forceSalomeServers, forceNoSalomeServers
 from .multijobstudy import MultiJobStudy
 from .slurmstudy import SlurmStudy
+from .localstudy import LocalStudy

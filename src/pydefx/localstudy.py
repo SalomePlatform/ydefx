@@ -21,32 +21,31 @@ import copy
 import os
 import json
 from . import pystudy
-from . import multijobbuilder
+from . import localbuilder
 from . import salome_proxy
 
 
-class MultiJobStudy(pystudy.PyStudy):
+class LocalStudy(pystudy.PyStudy):
   """
   This study uses one different job for each evaluation.
   """
   def __init__(self, sampleManager=None, schemaBuilder=None):
     if schemaBuilder is None:
-      schemaBuilder = multijobbuilder.MultiJobBuilder()
+      schemaBuilder = localbuilder.LocalBuilder()
     super().__init__(sampleManager, schemaBuilder)
 
   def createNewJob(self, script, sample, params):
     self._check(script,sample)
     self.sample = sample
     self.params = copy.deepcopy(params)
-    main_job_work_dir = self.params.salome_parameters.result_directory
+    main_job_work_dir = os.path.join(
+                                 self.params.salome_parameters.work_directory,
+                                 "idefixjob")
+    # dump the remote jobs parameters to the configuration file
     params_dic = params.dumpDict()
-    params_dic["salome_parameters"]["job_type"] = "command_salome"
-    params_dic["salome_parameters"]["job_file"] = self.schemaBuilder.getPointEval()
-    params_dic["salome_parameters"]["local_directory"] = main_job_work_dir
-    # set the parameters of the local job
+    # modify the parameters for the local loop job
     self.params.salome_parameters.resource_required.name = "localhost"
     self.params.salome_parameters.job_type = "command_salome" #"python_salome"
-    
     self.params.salome_parameters.work_directory = main_job_work_dir
     self.params.createTmpResultDirectory()
     result_directory = self.params.salome_parameters.result_directory

@@ -17,17 +17,26 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-import inspect
-import pathlib
-import os
-from .allpurposebuilder import AllPurposeBuilder
+import json
+from . import parameters
 
-class SlurmBuilder(AllPurposeBuilder):
-  def __init__(self, executor = None, pointEval = None, mainJob = None):
-    filename = inspect.getframeinfo(inspect.currentframe()).filename
-    install_root_directory = pathlib.Path(filename).resolve().parent
-    install_files_directory = os.path.join(install_root_directory, "plugins")
+def SalomeParameters():
+  """
+  This function can be called during the evaluation of a point in order to get
+  the parameters of the job.
+  """
+  result = None
+  try:
+    with open("idefixconfig.json", "r") as f:
+      config = json.load(f)
+    params = parameters.Parameters()
+    params.loadDict(config["params"])
+    result = params.salome_parameters
+  except:
+    result = None
+  return result
 
-    if executor is None:
-      executor = os.path.join(install_files_directory, "srunexecutor.py")
-    super().__init__(executor, pointEval, mainJob)
+def GetConfig():
+  with open("idefixconfig.json", "r") as f:
+    config = json.load(f)
+  return config

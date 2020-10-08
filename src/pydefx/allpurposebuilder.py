@@ -20,14 +20,37 @@
 import inspect
 import pathlib
 import os
-from .allpurposebuilder import AllPurposeBuilder
 
-class SlurmBuilder(AllPurposeBuilder):
+class AllPurposeBuilder:
   def __init__(self, executor = None, pointEval = None, mainJob = None):
     filename = inspect.getframeinfo(inspect.currentframe()).filename
     install_root_directory = pathlib.Path(filename).resolve().parent
     install_files_directory = os.path.join(install_root_directory, "plugins")
 
     if executor is None:
-      executor = os.path.join(install_files_directory, "srunexecutor.py")
-    super().__init__(executor, pointEval, mainJob)
+      raise TypeError("Parameter executor should not be None.")
+    self.executor = executor
+
+    if pointEval is None:
+      pointEval = os.path.join(install_files_directory, "pointeval.py")
+    self.pointEval = pointEval
+
+    if mainJob is None:
+      mainJob = os.path.join(install_files_directory, "mainjob.py")
+    self.mainJob = mainJob
+
+  def getMainJob(self):
+    return self.mainJob
+
+  def getExecutor(self):
+    return self.executor
+
+  def getPointEval(self):
+    return self.pointEval
+
+  def getPluginName(self):
+    basename = os.path.basename(self.executor)
+    if not basename.endswith(".py"):
+      raise ValueError("File name {} does not end with '.py'.".format(
+                                                                 self.executor))
+    return basename[:-3]

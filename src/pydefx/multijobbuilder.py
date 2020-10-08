@@ -20,37 +20,14 @@
 import inspect
 import pathlib
 import os
+from .allpurposebuilder import AllPurposeBuilder
 
-class MultiJobBuilder:
+class MultiJobBuilder(AllPurposeBuilder):
   def __init__(self, executor = None, pointEval = None, mainJob = None):
     filename = inspect.getframeinfo(inspect.currentframe()).filename
     install_root_directory = pathlib.Path(filename).resolve().parent
-    install_files_directory = os.path.join(install_root_directory, "multijob")
+    install_files_directory = os.path.join(install_root_directory, "plugins")
 
     if executor is None:
-      executor = os.path.join(install_files_directory, "executor.py")
-    self.executor = executor
-
-    if pointEval is None:
-      pointEval = os.path.join(install_files_directory, "pointeval.py")
-    self.pointEval = pointEval
-
-    if mainJob is None:
-      mainJob = os.path.join(install_files_directory, "mainjob.py")
-    self.mainJob = mainJob
-
-  def getMainJob(self):
-    return self.mainJob
-
-  def getExecutor(self):
-    return self.executor
-
-  def getPointEval(self):
-    return self.pointEval
-
-  def getPluginName(self):
-    basename = os.path.basename(self.executor)
-    if not basename.endswith(".py"):
-      raise Exception("File name {} does not end with '.py'.".format(
-                                                                 self.executor))
-    return basename[:-3]
+      executor = os.path.join(install_files_directory, "jobexecutor.py")
+    super().__init__(executor, pointEval, mainJob)

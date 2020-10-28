@@ -65,12 +65,14 @@ def exportConfig(dicconfig, directory = None):
   """ Save the configuration to a directory.
       dicconfig is a dictionary which contains the parameters to be saved.
       If directory is None, the configuration is saved to the current directory.
+      Return the path to the configuration file.
   """
   if directory is None:
     directory = os.getcwd()
   configpath = os.path.join(directory, "idefixconfig.json")
   with open(configpath, "w") as f:
     json.dump(dicconfig, f, indent=2)
+  return configpath
 
 def loadConfig(directory = None):
   """ Return the configuration dictionary from a directory.
@@ -79,7 +81,12 @@ def loadConfig(directory = None):
   if directory is None:
     directory = os.getcwd()
   configpath = os.path.join(directory, "idefixconfig.json")
-  with open("idefixconfig.json", "r") as f:
+  if not pathlib.Path(configpath).is_file():
+    configpath = os.path.join(directory, "..", "idefixconfig.json")
+  if not pathlib.Path(configpath).is_file():
+    message = "Configuration file not found in directory " + str(directory)
+    raise FileNotFoundError(message)
+  with open(configpath, "r") as f:
     config = json.load(f)
   return config
 
@@ -88,12 +95,8 @@ def loadJobConfig(directory = None):
       a idefixconfig.json file.
       If the directory is None, use the current directory.
   """
-  result = None
-  try:
-    config = loadConfig(directory)
-    params = parameters.Parameters()
-    params.loadDict(config["params"])
-    result = params.salome_parameters
-  except:
-    result = None
+  config = loadConfig(directory)
+  params = parameters.Parameters()
+  params.loadDict(config["params"])
+  result = params.salome_parameters
   return result

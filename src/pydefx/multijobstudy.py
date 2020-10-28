@@ -23,6 +23,7 @@ import json
 from . import pystudy
 from . import multijobbuilder
 from . import salome_proxy
+from . import configuration
 
 
 class MultiJobStudy(pystudy.PyStudy):
@@ -57,15 +58,13 @@ class MultiJobStudy(pystudy.PyStudy):
     self.params.salome_parameters.job_file = self.schemaBuilder.getMainJob()
 
     # export config
-    configpath = os.path.join(result_directory, "idefixconfig.json")
     dicconfig = {}
     dicconfig["nbbranches"]  = self.params.nb_branches
     dicconfig["studymodule"] = "idefixstudy"
     dicconfig["sampleIterator"] = self.sampleManager.getModuleName()
     dicconfig["params"] = params_dic
     dicconfig["plugin"] = self.schemaBuilder.getPluginName()
-    with open(configpath, "w") as f:
-      json.dump(dicconfig, f, indent=2)
+    configpath = configuration.exportConfig(dicconfig, result_directory)
     studypath = os.path.join(result_directory, "idefixstudy.py")
     with open(studypath, "w") as f:
       f.write(script.script)

@@ -287,13 +287,11 @@ For further details, see {}/logs directory on {}.""".format(
     inputFiles = self.sampleManager.prepareRun(self.sample, result_directory)
 
     # export nbbranches
-    configpath = os.path.join(result_directory, "idefixconfig.json")
     dicconfig = {}
     dicconfig["nbbranches"]  = self.params.nb_branches
     dicconfig["studymodule"] = "idefixstudy"
     dicconfig["sampleIterator"] = self.sampleManager.getModuleName()
-    with open(configpath, "w") as f:
-      json.dump(dicconfig, f, indent=2)
+    configpath = configuration.exportConfig(dicconfig, result_directory)
     studypath = os.path.join(result_directory, "idefixstudy.py")
     with open(studypath, "w") as f:
       f.write(script.script)

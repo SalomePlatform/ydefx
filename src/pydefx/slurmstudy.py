@@ -23,7 +23,7 @@ import json
 from . import pystudy
 from . import slurmbuilder
 from . import salome_proxy
-
+from . import configuration
 
 class SlurmStudy(pystudy.PyStudy):
   def __init__(self, sampleManager=None, schemaBuilder=None):
@@ -50,7 +50,6 @@ class SlurmStudy(pystudy.PyStudy):
     self.params.salome_parameters.job_file = self.schemaBuilder.getMainJob()
 
     # export config
-    configpath = os.path.join(result_directory, "idefixconfig.json")
     dicconfig = {}
     dicconfig["nbbranches"]  = self.params.nb_branches
     dicconfig["studymodule"] = "idefixstudy"
@@ -58,8 +57,7 @@ class SlurmStudy(pystudy.PyStudy):
     dicconfig["plugin"] = self.schemaBuilder.getPluginName()
     nbproc = self.params.salome_parameters.resource_required.nb_proc
     dicconfig["tasksPerEval"] = nbproc // self.params.nb_branches
-    with open(configpath, "w") as f:
-      json.dump(dicconfig, f, indent=2)
+    configpath = configuration.exportConfig(dicconfig, result_directory)
     studypath = os.path.join(result_directory, "idefixstudy.py")
     with open(studypath, "w") as f:
       f.write(script.script)

@@ -17,8 +17,11 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 from . import salome_proxy
+from . import parameters
 import tempfile
 import pathlib
+import os
+import json
 
 def defaultWorkingDir(resource):
   resManager = salome_proxy.getResourcesManager()
@@ -57,3 +60,40 @@ def availableResources():
   # GetFittingResources returns a tuple if in no salome session mode.
   # Force to list for uniformity between the two modes.
   return list(resManager.GetFittingResources(params.resource_required))
+
+def exportConfig(dicconfig, directory = None):
+  """ Save the configuration to a directory.
+      dicconfig is a dictionary which contains the parameters to be saved.
+      If directory is None, the configuration is saved to the current directory.
+  """
+  if directory is None:
+    directory = os.getcwd()
+  configpath = os.path.join(directory, "idefixconfig.json")
+  with open(configpath, "w") as f:
+    json.dump(dicconfig, f, indent=2)
+
+def loadConfig(directory = None):
+  """ Return the configuration dictionary from a directory.
+      If the directory is None, use the current directory.
+  """
+  if directory is None:
+    directory = os.getcwd()
+  configpath = os.path.join(directory, "idefixconfig.json")
+  with open("idefixconfig.json", "r") as f:
+    config = json.load(f)
+  return config
+
+def loadJobConfig(directory = None):
+  """ Return the salome job parameters loaded from a directory which contains
+      a idefixconfig.json file.
+      If the directory is None, use the current directory.
+  """
+  result = None
+  try:
+    config = loadConfig(directory)
+    params = parameters.Parameters()
+    params.loadDict(config["params"])
+    result = params.salome_parameters
+  except:
+    result = None
+  return result

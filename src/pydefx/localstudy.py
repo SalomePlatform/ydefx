@@ -27,7 +27,7 @@ from . import salome_proxy
 
 class LocalStudy(pystudy.PyStudy):
   """
-  This study uses one different job for each evaluation.
+  This study is always localy evaluated.
   """
   def __init__(self, sampleManager=None, schemaBuilder=None):
     if schemaBuilder is None:

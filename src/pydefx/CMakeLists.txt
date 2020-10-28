@@ -36,11 +36,8 @@ SET(SCRIPTS
   slurmstudy.py
   localbuilder.py
   localstudy.py
-  execconfiguration.py
   )
 
 INSTALL(FILES ${SCRIPTS} DESTINATION ${SALOME_INSTALL_PYTHON}/pydefx)
 ADD_SUBDIRECTORY(schemas)
 ADD_SUBDIRECTORY(plugins)
-#ADD_SUBDIRECTORY(multijob)
-#ADD_SUBDIRECTORY(slurm)

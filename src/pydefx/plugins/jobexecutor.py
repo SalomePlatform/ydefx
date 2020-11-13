@@ -4,6 +4,7 @@ import pickle
 import time
 import traceback
 
+pydefx.forceNoSalomeServers()
 class Context:
   def __init__(self):
     self.launcher = pydefx.salome_proxy.getLauncher() # getLauncher()

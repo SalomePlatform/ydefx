@@ -31,7 +31,7 @@ class TerminateJob:
       self.manager.addResult(idx, in_values, out_values, error)
     except Exception as e:
       traceback.print_exc()
-  
+
 if __name__ == '__main__':
   with open("idefixconfig.json", "r") as f:
     config = json.load(f)

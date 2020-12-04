@@ -1,4 +1,3 @@
-#import pydefx
 import os
 import pickle
 import time
@@ -15,7 +14,7 @@ class JobExecutor:
     self.config = config
 
   def initialize(self):
-    """ 
+    """
     Execute prescript.
     """
     pointeval = os.path.join(os.getcwd(), "pointeval.py")
@@ -36,7 +35,7 @@ class JobExecutor:
       error = str(e)
       traceback.print_exc()
     return error, out_values
-  
+
   def prepare(self, idx, point, context):
     """
     Define local and remote work directory.
@@ -54,10 +53,9 @@ class JobExecutor:
       # explicit dict convertion is needed for compatibility between python versions
       f.write(repr(dict(point)))
 
-  
   def noRunFound(self, idx, point, context):
     return True
-  
+
   def runjob(self, idx, point, context):
     """
     Create, launch and wait for the end of the job.

@@ -27,7 +27,7 @@ class PyStudyJob : public Job
 {
 public:
   PyStudyJob(const std::string& pymodule_name, const std::string& pyclass_name);
-  PyStudyJob(py2cpp::PyPtr& pyStudyObj); 
+  PyStudyJob(py2cpp::PyPtr& pyStudyObj);
   PyStudyJob();
   virtual ~PyStudyJob();
   virtual std::string state();

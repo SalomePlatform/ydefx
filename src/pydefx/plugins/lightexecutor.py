@@ -1,4 +1,3 @@
-#import pydefx
 import os
 import pickle
 import time
@@ -28,25 +27,14 @@ class JobExecutor:
     error = None
     out_values = None
     studymodule=self.config["studymodule"]
-    #studymodule += ".py"
-    #with open(studymodule, "r") as study_file:
-      #study_string = study_file.read()
-    #try:
-      #exec(study_string)
-      #out_values = _exec(**inputvals)
-    #except Exception as e:
-      #error=str(e) 
-      #traceback.print_exc()
-    # another way:
     import importlib
     try:
       idefixstudy=importlib.import_module(studymodule)
       out_values=idefixstudy._exec(**point)
     except Exception as e:
-      error=str(e) 
+      error=str(e)
       traceback.print_exc()
     return error, out_values
-  
 
 def createExecutor(config):
   return JobExecutor(config)

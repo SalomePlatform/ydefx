@@ -51,7 +51,7 @@ class JobExecutor:
       error = str(e)
       traceback.print_exc()
     return error, out_values
-  
+
   def prepare(self, idx, point, context):
     """
     Define local and remote work directory.
@@ -84,10 +84,10 @@ class JobExecutor:
     salome_parameters.out_files = ["idefixresult.txt", "idefixerror.txt"]
     salome_parameters.work_directory = point_remote_dir
     salome_parameters.result_directory = context.local_dir
-  
+
   def noRunFound(self, idx, point, context):
     return True
-  
+
   def runjob(self, idx, point, context):
     """
     Create, launch and wait for the end of the job.

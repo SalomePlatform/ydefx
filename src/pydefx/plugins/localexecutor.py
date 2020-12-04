@@ -1,4 +1,3 @@
-#import pydefx
 import os
 import pickle
 import time
@@ -7,7 +6,6 @@ import subprocess
 
 class Context:
   def __init__(self):
-    #self.launcher = pydefx.salome_proxy.getLauncher() # getLauncher()
     pass
 
 class JobExecutor:
@@ -37,7 +35,7 @@ class JobExecutor:
       error = str(e)
       traceback.print_exc()
     return error, out_values
-  
+
   def prepare(self, idx, point, context):
     """
     Define local and remote work directory.
@@ -55,21 +53,14 @@ class JobExecutor:
       # explicit dict convertion is needed for compatibility between python versions
       f.write(repr(dict(point)))
 
-  
   def noRunFound(self, idx, point, context):
     return True
-  
+
   def runjob(self, idx, point, context):
     """
     Create, launch and wait for the end of the job.
     """
-    # srun
-    #ntasks = self.config["tasksPerEval"]
     pointeval = os.path.join(os.getcwd(), "pointeval.py")
-    #command = "srun --ntasks={} --nodes=1 --chdir={} {} ".format(
-                                                             #str(ntasks),
-                                                             #context.local_dir,
-                                                             #pointeval)
     return_code = subprocess.check_call(pointeval, shell=True, cwd=context.local_dir)
 
   def getResult(self, context):

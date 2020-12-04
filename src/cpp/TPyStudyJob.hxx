@@ -37,21 +37,6 @@ public:
   , _sample(sample)
   {
     createNewJob(fnScript, params);
-    /*if(_lastError.empty()) // no errors during parent construction
-    {
-      try
-      {
-        py2cpp::PyPtr pySample = createPySample(sample);
-        py2cpp::PyFunction pyFn;
-        pyFn.loadExp(_pyStudy, "createNewJob");
-        pyFn(fnScript, pySample, params);
-      }
-      catch(std::exception& e)
-      {
-        _lastError = "An error occured while creating the job.\n";
-        _lastError += e.what();
-      }
-    }*/
   }
 
   TPyStudyJob(py2cpp::PyPtr& pyStudyObj,
@@ -84,7 +69,7 @@ public:
       }
     }
   }
-  
+
   virtual ~TPyStudyJob(){}
   virtual bool fetch()
   {

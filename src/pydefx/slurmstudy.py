@@ -41,7 +41,7 @@ class SlurmStudy(pystudy.PyStudy):
       os.makedirs(main_job_work_dir)
     # set the parameters of the local job
     self.params.salome_parameters.job_type = self.jobType()
-    
+
     result_directory = self.params.salome_parameters.result_directory
     # export sample to result_directory
     inputFiles = self.sampleManager.prepareRun(self.sample, result_directory)

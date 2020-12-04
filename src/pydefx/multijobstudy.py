@@ -47,7 +47,7 @@ class MultiJobStudy(pystudy.PyStudy):
     # set the parameters of the local job
     self.params.salome_parameters.resource_required.name = "localhost"
     self.params.salome_parameters.job_type = "command_salome" #"python_salome"
-    
+
     self.params.salome_parameters.work_directory = main_job_work_dir
     self.params.createTmpResultDirectory()
     result_directory = self.params.salome_parameters.result_directory

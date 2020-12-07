@@ -16,24 +16,34 @@
 //
 // See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 //
+#ifndef YDEFX_PYSTUDYJOB_HXX
+#define YDEFX_PYSTUDYJOB_HXX
+#include "Job.hxx"
+#include <py2cpp/PyPtr.hxx>
 
-#ifndef YDEFX_SAMPLETEST_HXX
-#define YDEFX_SAMPLETEST_HXX
-
-#include <cppunit/extensions/HelperMacros.h>
-
-class SampleTest: public CppUnit::TestFixture
+namespace ydefx
 {
-  CPPUNIT_TEST_SUITE(SampleTest);
-  CPPUNIT_TEST(fullStudy);
-  CPPUNIT_TEST(genericStudy);
-  CPPUNIT_TEST_SUITE_END();
+class PyStudyJob : public Job
+{
 public:
-  void setUp();
-  void tearDown();
-  void cleanUp();
-  void fullStudy();
-  void genericStudy();
+  PyStudyJob(const std::string& pymodule_name, const std::string& pyclass_name);
+  PyStudyJob(py2cpp::PyPtr& pyStudyObj);
+  PyStudyJob();
+  virtual ~PyStudyJob();
+  virtual std::string state();
+  virtual double progress();
+  virtual std::string dump();
+  virtual bool launch(); // return false when it fails
+  virtual bool fetch()=0; // return false when it fails
+  virtual const std::string& lastError();
+  virtual bool wait(); // Wait for the end of the job. Return false when it fails.
+  virtual void configureWaitDelay(int seconds);
+protected:
+  py2cpp::PyPtr _pyStudy;
+  std::string _lastError;
+  int _waitDelay;
 };
 
-#endif // YDEFX_SAMPLETEST_HXX
+}
+
+#endif //YDEFX_PYSTUDYJOB_HXX

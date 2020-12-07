@@ -30,6 +30,7 @@ SET(ydefx_SOURCES
   JobParametersProxy.cxx
   Exceptions.cxx
   MonoPyJob.cxx
+  PyStudyJob.cxx
 )
 
 SET(ydefx_HEADERS
@@ -44,6 +45,8 @@ SET(ydefx_HEADERS
   TMonoPyJob.hxx
   Job.hxx
   Launcher.hxx
+  PyStudyJob.hxx
+  TPyStudyJob.hxx
 )
 
 SET(ydefx_LINK

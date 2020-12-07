@@ -20,6 +20,7 @@
 #define YDEFX_LAUNCHER_H
 
 #include "TMonoPyJob.hxx"
+#include "TPyStudyJob.hxx"
 
 namespace ydefx
 {
@@ -38,6 +39,12 @@ public:
   Job* submitMonoPyJob(const PyStudyFunction& fnScript,
                        Sample<Ts...>& sample,
                        const JobParametersProxy& params);
+
+  template <class ...Ts>
+  Job* submitPyStudyJob(py2cpp::PyPtr& pyStudyObj,
+                        const PyStudyFunction& fnScript,
+                        Sample<Ts...>& sample,
+                        const JobParametersProxy& params);
 
   /*!
    * Connect to an already created job.
@@ -69,6 +76,45 @@ Job* Launcher::submitMonoPyJob(const PyStudyFunction& fnScript,
   try
   {
     result = new TMonoPyJob<Ts...>(fnScript, sample, params);
+  }
+  catch(std::exception& e)
+  {
+    if(result != nullptr)
+      delete result;
+    result = nullptr;
+    _lastError = e.what();
+    return result;
+  }
+
+  if(!result->lastError().empty())
+  {
+    _lastError  = result->lastError();
+    delete result;
+    result = nullptr;
+    return result;
+  }
+
+  if(!result->launch())
+  {
+    _lastError = "Failed to submit job.\n";
+    _lastError  += result->lastError();
+    delete result;
+    result = nullptr;
+  }
+  return result;
+}
+
+template <class ...Ts>
+Job* Launcher::submitPyStudyJob(py2cpp::PyPtr& pyStudyObj,
+                                const PyStudyFunction& fnScript,
+                                Sample<Ts...>& sample,
+                                const JobParametersProxy& params)
+{
+  Job* result = nullptr;
+  _lastError = "";
+  try
+  {
+    result = new TPyStudyJob<Ts...>(pyStudyObj, fnScript, sample, params);
   }
   catch(std::exception& e)
   {

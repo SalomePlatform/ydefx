@@ -82,8 +82,8 @@ class PyStudy:
     job_string = loadJobString(path)
     launcher = salome_proxy.getLauncher()
     self.job_id = launcher.restoreJob(job_string)
-    if job_id >= 0:
-      salome_params = launcher.getJobParameters(job_id)
+    if self.job_id >= 0:
+      salome_params = launcher.getJobParameters(self.job_id)
       self.params = parameters.Parameters(salome_parameters=salome_params)
       self.getResult()
     return self.job_id
@@ -193,9 +193,9 @@ class PyStudy:
         if exit_code == "0" :
           errorIfNoResults = True # we expect to have full results
         else:
-          errorMessage = "An error occured during the execution of the YACS schema."
+          errorMessage = "An error occured during the execution of the job."
       else:
-        errorMessage = "Failed to get the exit code of the YACS schema execution."
+        errorMessage = "Failed to get the exit code of the job."
 
     elif state == "RUNNING" or state == "PAUSED" or state == "ERROR" :
       # partial results may be available
@@ -287,13 +287,11 @@ For further details, see {}/logs directory on {}.""".format(
     inputFiles = self.sampleManager.prepareRun(self.sample, result_directory)
 
     # export nbbranches
-    configpath = os.path.join(result_directory, "idefixconfig.json")
     dicconfig = {}
     dicconfig["nbbranches"]  = self.params.nb_branches
     dicconfig["studymodule"] = "idefixstudy"
     dicconfig["sampleIterator"] = self.sampleManager.getModuleName()
-    with open(configpath, "w") as f:
-      json.dump(dicconfig, f, indent=2)
+    configpath = configuration.exportConfig(dicconfig, result_directory)
     studypath = os.path.join(result_directory, "idefixstudy.py")
     with open(studypath, "w") as f:
       f.write(script.script)
@@ -317,21 +315,10 @@ For further details, see {}/logs directory on {}.""".format(
         raise StudyUseException("Parameter {} not found in the sample.".format(nm))
 
 ### Deprecated!!!!
-def dumpJob(result_directory, jobString):
-  """
-  Save the jobString to a file into result_directory.
-  result_directory is a string representing a path to a directory.
-  jobString is a string representing the serialization of a job.
-  Use loadJobString for reloading the string saved here.
-  """
-  jobDumpPath = os.path.join(result_directory, PyStudy.JOB_DUMP_NAME)
-  with open(jobDumpPath, "w") as f:
-    f.write(job_string)
-
 def loadJobString(result_directory):
   """
   Return the jobString saved by the dumpJob function into a directory.
-  Use dumpJob for saving a the string.
+  Use dumpJob for saving the string.
   """
   jobDumpPath = os.path.join(result_directory, PyStudy.JOB_DUMP_NAME)
   with open(jobDumpPath, "r") as f:

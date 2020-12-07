@@ -18,6 +18,7 @@
 #
 SET(SCRIPTS
   __init__.py
+  allpurposebuilder.py
   configuration.py
   parameters.py
   pyscript.py
@@ -29,7 +30,14 @@ SET(SCRIPTS
   studyexception.py
   studyresult.py
   salome_proxy.py
+  multijobbuilder.py
+  multijobstudy.py
+  slurmbuilder.py
+  slurmstudy.py
+  localbuilder.py
+  localstudy.py
   )
 
 INSTALL(FILES ${SCRIPTS} DESTINATION ${SALOME_INSTALL_PYTHON}/pydefx)
 ADD_SUBDIRECTORY(schemas)
+ADD_SUBDIRECTORY(plugins)

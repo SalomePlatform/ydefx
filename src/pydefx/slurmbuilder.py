@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (C) 2019  EDF R&D
 #
 # This library is free software; you can redistribute it and/or
@@ -15,18 +16,18 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
-
-from .parameters import Parameters
-from .pyscript import PyScript
-from .pystudy import PyStudy
-from .sample import Sample
-from .defaultschemabuilder import DefaultSchemaBuilder
+#
+import inspect
+import pathlib
+import os
 from .allpurposebuilder import AllPurposeBuilder
-from .localbuilder import LocalBuilder
-from .multijobbuilder import MultiJobBuilder
-from .slurmbuilder import SlurmBuilder
 
-from .salome_proxy import forceSalomeServers, forceNoSalomeServers
-from .multijobstudy import MultiJobStudy
-from .slurmstudy import SlurmStudy
-from .localstudy import LocalStudy
+class SlurmBuilder(AllPurposeBuilder):
+  def __init__(self, executor = None, pointEval = None, mainJob = None):
+    filename = inspect.getframeinfo(inspect.currentframe()).filename
+    install_root_directory = pathlib.Path(filename).resolve().parent
+    install_files_directory = os.path.join(install_root_directory, "plugins")
+
+    if executor is None:
+      executor = os.path.join(install_files_directory, "srunexecutor.py")
+    super().__init__(executor, pointEval, mainJob)

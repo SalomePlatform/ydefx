@@ -83,7 +83,7 @@ class Parameters:
     newobj.salome_parameters.mem_per_cpu = self.salome_parameters.mem_per_cpu
     newobj.salome_parameters.wckey = self.salome_parameters.wckey
     newobj.salome_parameters.extra_params = self.salome_parameters.extra_params
-    newobj.salome_parameters.specific_parameters = self.salome_parameters.specific_parameters
+    #newobj.salome_parameters.specific_parameters = self.salome_parameters.specific_parameters
     newobj.salome_parameters.resource_required.name = self.salome_parameters.resource_required.name
     newobj.salome_parameters.resource_required.hostname = self.salome_parameters.resource_required.hostname
     newobj.salome_parameters.resource_required.can_launch_batch_jobs = self.salome_parameters.resource_required.can_launch_batch_jobs
@@ -96,3 +96,74 @@ class Parameters:
     newobj.salome_parameters.resource_required.nb_proc_per_node = self.salome_parameters.resource_required.nb_proc_per_node
 
     return newobj
+
+  def dumpDict(self):
+    """Create a dictionary with all the properties.
+       Can be used for serialization with json."""
+    newdict = {
+      "nb_branches" : self.nb_branches,
+      "salome_parameters" : {
+          "job_name" : self.salome_parameters.job_name,
+          "job_type" : self.salome_parameters.job_type,
+          "job_file" : self.salome_parameters.job_file,
+          "pre_command" : self.salome_parameters.pre_command,
+          "env_file" : self.salome_parameters.env_file,
+          "in_files" : list(self.salome_parameters.in_files),
+          "out_files" : list(self.salome_parameters.out_files),
+          "work_directory" : self.salome_parameters.work_directory,
+          "local_directory" : self.salome_parameters.local_directory,
+          "result_directory" : self.salome_parameters.result_directory,
+          "maximum_duration" : self.salome_parameters.maximum_duration,
+          "queue" : self.salome_parameters.queue,
+          "partition" : self.salome_parameters.partition,
+          "exclusive" : self.salome_parameters.exclusive,
+          "mem_per_cpu" : self.salome_parameters.mem_per_cpu,
+          "wckey" : self.salome_parameters.wckey,
+          "extra_params" : self.salome_parameters.extra_params,
+          #"specific_parameters" : str(self.salome_parameters.specific_parameters),
+          "resource_required" : {
+              "name" : self.salome_parameters.resource_required.name,
+              "hostname" : self.salome_parameters.resource_required.hostname,
+              "can_launch_batch_jobs" : self.salome_parameters.resource_required.can_launch_batch_jobs,
+              "can_run_containers" : self.salome_parameters.resource_required.can_run_containers,
+              "OS" : self.salome_parameters.resource_required.OS,
+              "nb_proc" : self.salome_parameters.resource_required.nb_proc,
+              "mem_mb" : self.salome_parameters.resource_required.mem_mb,
+              "cpu_clock" : self.salome_parameters.resource_required.cpu_clock,
+              "nb_node" : self.salome_parameters.resource_required.nb_node,
+              "nb_proc_per_node" : self.salome_parameters.resource_required.nb_proc_per_node
+          }
+      }
+    }
+    return newdict
+
+  def loadDict(self, dico):
+    self.nb_branches = dico["nb_branches"]
+    #self.salome_parameters = salome_proxy.createSalomeParameters()
+    self.salome_parameters.job_name = dico["salome_parameters"]["job_name"]
+    self.salome_parameters.job_type = dico["salome_parameters"]["job_type"]
+    self.salome_parameters.job_file = dico["salome_parameters"]["job_file"]
+    self.salome_parameters.pre_command = dico["salome_parameters"]["pre_command"]
+    self.salome_parameters.env_file = dico["salome_parameters"]["env_file"]
+    self.salome_parameters.in_files = dico["salome_parameters"]["in_files"]
+    self.salome_parameters.out_files = dico["salome_parameters"]["out_files"]
+    self.salome_parameters.work_directory = dico["salome_parameters"]["work_directory"]
+    self.salome_parameters.local_directory = dico["salome_parameters"]["local_directory"]
+    self.salome_parameters.result_directory = dico["salome_parameters"]["result_directory"]
+    self.salome_parameters.maximum_duration = dico["salome_parameters"]["maximum_duration"]
+    self.salome_parameters.queue = dico["salome_parameters"]["queue"]
+    self.salome_parameters.partition = dico["salome_parameters"]["partition"]
+    self.salome_parameters.exclusive = dico["salome_parameters"]["exclusive"]
+    self.salome_parameters.mem_per_cpu = dico["salome_parameters"]["mem_per_cpu"]
+    self.salome_parameters.wckey = dico["salome_parameters"]["wckey"]
+    self.salome_parameters.extra_params = dico["salome_parameters"]["extra_params"]
+    self.salome_parameters.resource_required.name = dico["salome_parameters"]["resource_required"]["name"]
+    self.salome_parameters.resource_required.hostname = dico["salome_parameters"]["resource_required"]["hostname"]
+    self.salome_parameters.resource_required.can_launch_batch_jobs = dico["salome_parameters"]["resource_required"]["can_launch_batch_jobs"]
+    self.salome_parameters.resource_required.can_run_containers = dico["salome_parameters"]["resource_required"]["can_run_containers"]
+    self.salome_parameters.resource_required.OS = dico["salome_parameters"]["resource_required"]["OS"]
+    self.salome_parameters.resource_required.nb_proc = dico["salome_parameters"]["resource_required"]["nb_proc"]
+    self.salome_parameters.resource_required.mem_mb = dico["salome_parameters"]["resource_required"]["mem_mb"]
+    self.salome_parameters.resource_required.cpu_clock = dico["salome_parameters"]["resource_required"]["cpu_clock"]
+    self.salome_parameters.resource_required.nb_node = dico["salome_parameters"]["resource_required"]["nb_node"]
+    self.salome_parameters.resource_required.nb_proc_per_node = dico["salome_parameters"]["resource_required"]["nb_proc_per_node"]

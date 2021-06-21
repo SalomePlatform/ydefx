@@ -1,4 +1,4 @@
-// Copyright (C) 2019-2021 EDF R&D
+// Copyright (C) 2021 EDF R&D
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -16,33 +16,15 @@
 //
 // See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 //
-#ifndef IDEFX_QuickConfigWidget_HXX
-#define IDEFX_QuickConfigWidget_HXX
-#include "ydefxguiExports.hxx"
-#include "JobParametersProxy.hxx"
-#include <QtWidgets>
 
-namespace ydefx
-{
-class YDEFXGUI_EXPORT QuickConfigWidget: public QScrollArea
-{
-  Q_OBJECT
-public:
-  QuickConfigWidget(ydefx::JobParametersProxy& model, QWidget* parent=0);
-  virtual ~QuickConfigWidget();
+#pragma once
 
-public slots:
-  void updateJobName(const QString& value);
-  void updateResource(const QString& value);
-  void updateNbBranches(int value);
-  void resetParams();
-
-signals:
-  void defaultNbBranches(int value);
-  void defaultWorkingDir(const QString& value);
-  void defaultWcKey(const QString& value);
-private:
-  ydefx::JobParametersProxy& _model;
-};
-}
-#endif //IDEFX_QuickConfigWidget_HXX
+#ifdef WIN32
+#  if defined(ydefxgui_EXPORTS) || defined(ydefxgui_EXPORTS)
+#    define YDEFXGUI_EXPORT __declspec( dllexport )
+#  else
+#    define YDEFXGUI_EXPORT __declspec( dllimport )
+#  endif
+#else
+#  define YDEFXGUI_EXPORT
+#endif

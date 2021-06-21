@@ -18,12 +18,13 @@
 //
 #ifndef IDEFX_RESOURCEWIDGET_HXX
 #define IDEFX_RESOURCEWIDGET_HXX
+#include "ydefxguiExports.hxx"
 #include "JobParametersProxy.hxx"
 #include <QtWidgets>
 namespace ydefx
 {
 
-class ResourceWidget: public QTabWidget
+class YDEFXGUI_EXPORT ResourceWidget: public QTabWidget
 {
   Q_OBJECT
 public:

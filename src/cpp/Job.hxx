@@ -18,12 +18,13 @@
 //
 #ifndef YDEFX_JOB_H
 #define YDEFX_JOB_H
+#include "ydefxExports.hxx"
 #include <string>
 
 namespace ydefx
 {
 
-class Job
+class YDEFX_EXPORT Job
 {
 public:
   virtual ~Job(){}

@@ -18,6 +18,7 @@
 //
 #ifndef YDEFX_TPYSTUDYJOB_HXX
 #define YDEFX_TPYSTUDYJOB_HXX
+#include "ydefxExports.hxx"
 #include "JobParametersProxy.hxx"
 #include "PyStudyJob.hxx"
 #include "SamplePyConversions.hxx"
@@ -26,7 +27,7 @@
 namespace ydefx
 {
 template <class ...Ts>
-class TPyStudyJob : public PyStudyJob
+class YDEFX_EXPORT TPyStudyJob : public PyStudyJob
 {
 public:
   //! Create a new job using the default pystudy class.

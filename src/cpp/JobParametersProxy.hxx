@@ -18,6 +18,7 @@
 //
 #ifndef YDEFX_JOBPARAMETERSPROXY_H
 #define YDEFX_JOBPARAMETERSPROXY_H
+#include "ydefxExports.hxx"
 #include <string>
 #include <list>
 #include <map>
@@ -25,7 +26,7 @@
 
 namespace ydefx
 {
-class JobParametersProxy
+class YDEFX_EXPORT JobParametersProxy
 {
 public:
   JobParametersProxy();

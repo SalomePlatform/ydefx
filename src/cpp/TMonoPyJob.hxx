@@ -18,6 +18,7 @@
 //
 #ifndef YDEFX_TMONOPYJOB_HXX
 #define YDEFX_TMONOPYJOB_HXX
+#include "ydefxExports.hxx"
 #include "JobParametersProxy.hxx"
 #include "MonoPyJob.hxx"
 #include "SamplePyConversions.hxx"
@@ -26,7 +27,7 @@
 namespace ydefx
 {
 template <class ...Ts>
-class TMonoPyJob : public MonoPyJob
+class YDEFX_EXPORT TMonoPyJob : public MonoPyJob
 {
 public:
   //! Create a new job.

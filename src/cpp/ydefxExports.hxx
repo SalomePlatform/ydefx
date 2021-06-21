@@ -1,4 +1,4 @@
-// Copyright (C) 2019-2021 EDF R&D
+// Copyright (C) 2021 EDF R&D
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Lesser General Public
@@ -16,27 +16,15 @@
 //
 // See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 //
-#ifndef YDEFX_STUDYFUNCTION_H
-#define YDEFX_STUDYFUNCTION_H
-#include "ydefxExports.hxx"
-#include <string>
-#include <list>
 
-namespace ydefx
-{
-class YDEFX_EXPORT StudyFunction
-{
-public:
-  virtual ~StudyFunction(){}
-  virtual void loadFile(const std::string& path)=0;
-  virtual void loadString(const std::string&)=0;
-  virtual void save(const std::string& path)=0;
-  virtual std::string content()const=0;
-  virtual std::list<std::string> inputNames()const=0;
-  virtual std::list<std::string> outputNames()const=0;
-  virtual std::string errors()const=0;
-  virtual std::list<std::string> datafiles()const=0;
-  virtual bool isValid()const=0;
-};
-}
-#endif // YDEFX_STUDYFUNCTION_H
+#pragma once
+
+#ifdef WIN32
+#  if defined(ydefx_EXPORTS) || defined(ydefx_EXPORTS)
+#    define YDEFX_EXPORT __declspec( dllexport )
+#  else
+#    define YDEFX_EXPORT __declspec( dllimport )
+#  endif
+#else
+#  define YDEFX_EXPORT
+#endif

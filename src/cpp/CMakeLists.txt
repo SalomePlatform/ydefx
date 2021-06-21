@@ -47,6 +47,7 @@ SET(ydefx_HEADERS
   Launcher.hxx
   PyStudyJob.hxx
   TPyStudyJob.hxx
+  ydefxExports.hxx
 )
 
 SET(ydefx_LINK

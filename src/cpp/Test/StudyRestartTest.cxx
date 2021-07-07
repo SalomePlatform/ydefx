@@ -21,6 +21,9 @@
 #include <algorithm>
 #include <thread>
 #include <chrono>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
 
 void SampleTest::setUp()
 {
@@ -45,7 +48,12 @@ void SampleTest::studyTest()
   {
     ydefx::JobParametersProxy jobParams;
     jobParams.configureResource("localhost");
-    jobParams.work_directory(jobParams.work_directory() + "/RestartTest");
+    std::time_t t = std::time(nullptr);
+    std::tm tm = *std::localtime(&t);
+    std::stringstream ss;
+    ss << jobParams.work_directory() << "/RestartTest"
+       << std::put_time(&tm, "%m%d%H%M%S");
+    jobParams.work_directory(ss.str());
     jobParams.createResultDirectory("/tmp");
 
     std::string pyScript = 
@@ -78,12 +86,17 @@ void SampleTest::studyTest()
     // ok means that the wait command succeeded. It is not the state of the job.
     CPPUNIT_ASSERT(ok);
     double progress = restoredJob->progress();
+    int maxtries = 10;
     // We can check the progress in order to know if the job is done, but we
     // cannot detect if the job finished in error.
-    if(progress < 1.0)
-      std::this_thread::sleep_for(std::chrono::seconds(10));
-    double progress2 = restoredJob->progress();
-    CPPUNIT_ASSERT(progress <= progress2);
+    while(progress < 1.0 && maxtries > 0)
+    {
+      // wait for the job to finish
+      std::this_thread::sleep_for(std::chrono::seconds(5));
+      progress = restoredJob->progress();
+      maxtries--;
+    }
+    CPPUNIT_ASSERT(progress >= 1.0 );
     ok = restoredJob->fetch();
     CPPUNIT_ASSERT(ok);
     std::vector<double> expectedResult = {0.5, 0.5, 0.5, 0.5};

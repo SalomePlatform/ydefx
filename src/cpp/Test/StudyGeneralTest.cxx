@@ -19,6 +19,9 @@
 #include "StudyGeneralTest.hxx"
 #include "../Launcher.hxx" // possible conflict with KERNEL/Launcher/Launcher.hxx
 #include <algorithm>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
 
 void SampleTest::setUp()
 {
@@ -39,7 +42,12 @@ void SampleTest::fullStudy()
 
     ydefx::JobParametersProxy jobParams;
     jobParams.configureResource("localhost");
-    jobParams.work_directory(jobParams.work_directory() + "/GeneralTest");
+    std::time_t t = std::time(nullptr);
+    std::tm tm = *std::localtime(&t);
+    std::stringstream ss;
+    ss << jobParams.work_directory() << "/GeneralTest"
+       << std::put_time(&tm, "%m%d%H%M%S");
+    jobParams.work_directory(ss.str());
     jobParams.createResultDirectory("/tmp");
     std::string pyScript =
 "def _exec(a, b):\n"
@@ -116,7 +124,12 @@ void SampleTest::genericStudy()
 
     ydefx::JobParametersProxy jobParams;
     jobParams.configureResource("localhost");
-    jobParams.work_directory(jobParams.work_directory() + "/GenericTest");
+    std::time_t t = std::time(nullptr);
+    std::tm tm = *std::localtime(&t);
+    std::stringstream ss;
+    ss << jobParams.work_directory() << "/GenericTest"
+       << std::put_time(&tm, "%m%d%H%M%S");
+    jobParams.work_directory(ss.str());
     jobParams.createResultDirectory("/tmp");
     std::string pyScript =
 "def _exec(a, b):\n"

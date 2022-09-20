@@ -149,4 +149,13 @@ std::list<std::string> PyStudyFunction::datafiles()const
   return std::list<std::string>();
 }
 
+py2cpp::PyPtr PyStudyFunction::createEmptySample()const
+{
+  py2cpp::PyPtr sample;
+  py2cpp::PyFunction fnCreateEmptySample;
+  fnCreateEmptySample.loadExp(_pyObject, "CreateEmptySample");
+  sample = fnCreateEmptySample();
+  return sample;
+}
+
 }

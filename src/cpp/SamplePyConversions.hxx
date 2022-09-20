@@ -87,14 +87,6 @@ template <class ...Ts>
 YDEFX_EXPORT py2cpp::ConversionCheck errorsFromPy(PyObject* obj, Sample<Ts...>& sample);
 
 /*!
- * A python sample object is created and it contains input and output names of
- * variables. It also contains input values, but output values and errors are
- * not copied.
- */
-template <class ...Ts>
-YDEFX_EXPORT py2cpp::PyPtr createPySample(const Sample<Ts...>& sample);
-
-/*!
  * Fetch output values and errors from the python objet.
  * The c++ sample should already contain the names of variables when this
  * function is called.
@@ -353,21 +345,6 @@ YDEFX_EXPORT py2cpp::ConversionCheck errorsFromPy(PyObject* obj, Sample<Ts...>& 
   else
     check.addError("Sample error", obj);
   return check;
-}
-
-template <class ...Ts>
-YDEFX_EXPORT py2cpp::PyPtr createPySample(const Sample<Ts...>& sample)
-{
-  py2cpp::PyFunction sampleConstructor;
-  sampleConstructor.loadExp("pydefx", "Sample");
-  py2cpp::PyPtr result = sampleConstructor(sample.allInputNames(),
-                                           sample.allOutputNames());
-
-  py2cpp::PyFunction setInputValues;
-  setInputValues.loadExp(result, "setInputValues");
-  setInputValues(inputToPy(sample));
-
-  return result;
 }
 
 template <class ...Ts>

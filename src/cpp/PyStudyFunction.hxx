@@ -40,6 +40,7 @@ public:
   virtual std::string errors()const;
   virtual bool isValid()const;
   virtual std::list<std::string> datafiles()const;
+  py2cpp::PyPtr createEmptySample()const;
   friend PyObject * py2cpp::toPy(const PyStudyFunction& jp);
 private:
   py2cpp::PyPtr _pyObject;

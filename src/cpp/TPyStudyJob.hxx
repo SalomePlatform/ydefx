@@ -99,7 +99,11 @@ private:
     {
       try
       {
-        py2cpp::PyPtr pySample = createPySample(_sample);
+        py2cpp::PyPtr pySample = fnScript.createEmptySample();
+        py2cpp::PyFunction setInputValues;
+        setInputValues.loadExp(pySample, "setInputValues");
+        setInputValues(inputToPy(_sample));
+
         py2cpp::PyFunction pyFn;
         pyFn.loadExp(_pyStudy, "createNewJob");
         pyFn(fnScript, pySample, params);

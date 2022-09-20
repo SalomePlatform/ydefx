@@ -2,7 +2,7 @@ import pydefx
 import os
 
 myParams = pydefx.Parameters()
-myParams.configureResource("eole")
+myParams.configureResource("gaia")
 #myParams.createResultDirectory("/tmp")
 myParams.nb_branches = 4
 myParams.salome_parameters.resource_required.nb_proc = 1

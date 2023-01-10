@@ -24,6 +24,8 @@ try:
   result = _exec(**inputvals)
 except Exception as e:
   error=str(e)
+  if not error :
+    error = "Exception " + repr(e)
   os.chdir(old_dir) # back to the current case job directory
   with open(traceback_result, "w") as f:
     traceback.print_exc(file=f)

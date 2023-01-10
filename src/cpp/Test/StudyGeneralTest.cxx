@@ -203,5 +203,64 @@ void SampleTest::genericStudy()
     CPPUNIT_ASSERT(l.lastError().find("SyntaxError") != std::string::npos);
 }
 
+void SampleTest::emptyError()
+/// Test the case of an error with an empty description.
+{
+    std::list<std::string> resources = ydefx::JobParametersProxy::AvailableResources();
+    CPPUNIT_ASSERT(resources.size() > 0);
+
+    ydefx::JobParametersProxy jobParams;
+    jobParams.configureResource("localhost");
+    std::time_t t = std::time(nullptr);
+    std::tm tm = *std::localtime(&t);
+    std::stringstream ss;
+    ss << jobParams.work_directory() << "/GenericTest"
+       << std::put_time(&tm, "%m%d%H%M%S");
+    jobParams.work_directory(ss.str());
+    jobParams.createResultDirectory("/tmp");
+    std::string pyScript =
+"def _exec(x):\n"
+"  if x==0:\n"
+"    raise RuntimeError("")\n" // error with an empty description
+"  y = x * x\n"
+"  return y\n";
+
+    ydefx::PyStudyFunction studyFunction;
+    studyFunction.loadString(pyScript);
+    CPPUNIT_ASSERT(studyFunction.isValid());
+
+    ydefx::Sample<double, py2cpp::PyPtr > sample;
+    // set default value for not computed and failed points
+    sample.outputs<double>().setDefault(std::nan(""));
+    std::vector<double> x_vals = {0., 1., 2., 3.};
+    sample.inputs<double>().set("x", x_vals);
+    sample.outputs<double>().addName("y");
+
+    py2cpp::PyFunction objConstructor;
+    objConstructor.loadExp("pydefx", "PyStudy");
+    py2cpp::PyPtr pyStudy = objConstructor();
+
+    ydefx::Launcher l;
+    ydefx::Job* myJob = l.submitPyStudyJob(pyStudy, studyFunction, sample, jobParams);
+    CPPUNIT_ASSERT(myJob);
+    bool ok = myJob->wait();
+    CPPUNIT_ASSERT(ok);
+    CPPUNIT_ASSERT(myJob->lastError().empty());
+    std::string jobState = myJob->state();
+    CPPUNIT_ASSERT(jobState == "FINISHED");
+    ok = myJob->fetch();
+    CPPUNIT_ASSERT(ok);
+    CPPUNIT_ASSERT(myJob->lastError().empty());
+    CPPUNIT_ASSERT(sample.pointState(0) == ydefx::ExecutionState::ERROR);
+    const std::vector<double>& result = sample.outputs<double>().get("y");
+    CPPUNIT_ASSERT(std::isnan(result[0]));
+    CPPUNIT_ASSERT(1. == result[1]);
+    CPPUNIT_ASSERT(4. == result[2]);
+    CPPUNIT_ASSERT(9. == result[3]);
+    CPPUNIT_ASSERT(!sample.getError(0).empty());
+    delete myJob;
+}
+
+
 CPPUNIT_TEST_SUITE_REGISTRATION( SampleTest );
 #include "PyTestMain.cxx"

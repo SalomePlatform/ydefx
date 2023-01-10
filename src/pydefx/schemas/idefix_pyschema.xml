@@ -45,7 +45,9 @@ result=None
 try:
   result=idefixstudy._exec(**inputvals)
 except Exception as e:
-  error=str(e) 
+  error=str(e)
+  if not error :
+    error = "Exception " + repr(e)
   traceback.print_exc()
 o0=pickle.dumps((error, result), protocol=0).decode()
 ]]></code></script>

@@ -29,22 +29,26 @@ def defaultWorkingDir(resource):
   return resource_definition.working_directory
 
 def defaultNbBranches(resource):
+  """
+  Return the number of cores available on a resource.
+  """
   resManager = salome_proxy.getResourcesManager()
   resource_definition = resManager.GetResourceDefinition(resource)
-  ret = resource_definition.nb_node
+  ret = resource_definition.nb_node * resource_definition.nb_proc_per_node
   if ret < 1:
     ret = 1
   return ret
-  
-def getNumberOfCoresForLocalhost():
-    """
-    Return total number of cores for all resources marked as able to run containers ( "canRunContainers" attribute
-    set to true in the CatalogResources.xml ).
-    """
-    import LifeCycleCORBA
-    params = LifeCycleCORBA.ResourceParameters(can_run_containers=True)
-    resources = salome_proxy.getResourcesManager().GetFittingResources(params)
-    return sum( [salome_proxy.getResourcesManager().GetResourceDefinition(res).nb_proc_per_node for res in resources] )
+
+def allCoresAvailable():
+  """
+  Return the total number of cores of all resources that can run containers.
+  ( "canRunContainers" attribute set to true in CatalogResources.xml )
+  """
+  resManager = salome_proxy.getResourcesManager()
+  params     = salome_proxy.createSalomeParameters()
+  params.resource_required.can_run_containers = True
+  resources  = resManager.GetFittingResources(params.resource_required)
+  return sum([defaultNbBranches(res) for res in resources ])
 
 def defaultBaseDirectory():
   """Return the default path to the root of any new result directory."""
@@ -63,11 +67,10 @@ def defaultWckey(resource="localhost"):
   return result
 
 def availableResources():
-  """ Return the list of resources defined in the current catalog.
-  
-  Regarding list of Resources in the CatalogResources.xml this method returns those able to launch jobs.
-  Ydefx engine delegate to a job encapsulating itself an execution of YACS graph with driver application.
-  Consequently, the resource to evaluate in parallel the function should one of those returned by this method.
+  """
+  Return the list of resources defined in the current catalog that are able to
+  launch jobs.
+  Ydefx can launch the evaluations in a job on one of these resources.
   """
   resManager = salome_proxy.getResourcesManager()
   params     = salome_proxy.createSalomeParameters()

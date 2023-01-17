@@ -1,4 +1,4 @@
-# Copyright (C) 2019-2021 EDF R&D
+# Copyright (C) 2023 EDF R&D
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,20 +16,8 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
+SET(SCRIPTS
+mpmcn.py
+)
 
-# For salome test
-IF(SALOME_BUILD_TESTS)
-  INSTALL(FILES CTestTestfileInstall.cmake
-          DESTINATION ${SALOME_YDEFX_INSTALL_TEST}
-          RENAME CTestTestfile.cmake)
-ENDIF(SALOME_BUILD_TESTS)
-
-ADD_SUBDIRECTORY(cpp)
-ADD_SUBDIRECTORY(pydefx)
-ADD_SUBDIRECTORY(pytools)
-IF(YDEFX_BUILD_GUI)
-  ADD_SUBDIRECTORY(gui)
-ENDIF(YDEFX_BUILD_GUI)
-IF(SALOME_BUILD_TESTS)
-  ADD_SUBDIRECTORY(pyexample)
-ENDIF(SALOME_BUILD_TESTS)
+INSTALL(FILES ${SCRIPTS} DESTINATION ${SALOME_INSTALL_PYTHON})

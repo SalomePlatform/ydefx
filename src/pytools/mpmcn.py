@@ -150,5 +150,5 @@ def init(resourceName, resultDirectory = "/tmp"):
     myParams.configureResource(resourceName)
     myParams.createResultDirectory(resultDirectory)
     if resourceName == "localhost":
-        myParams.nb_branches = configuration.getNumberOfCoresForLocalhost()
+        myParams.nb_branches = configuration.allCoresAvailable()
     return myParams

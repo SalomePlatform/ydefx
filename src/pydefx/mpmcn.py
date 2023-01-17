@@ -19,8 +19,6 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 
 import pydefx
-import salome
-salome.salome_init()
 
 class Pool:
     def __init__(self, params):
@@ -94,7 +92,7 @@ def _exec({}):
                 exc.tmp_dir = self.getResultDirectory()
                 raise exc
         else:
-            raise RuntimeError("Error during job submission or during the driver execution (that should never happend)")
+            raise RuntimeError( "Error during job submission or during the driver execution (that should never happend). Internal error : {}".format(self.myStudy.getResult().getErrors()) )
 
     def __enter__(self):
         self.myStudy = pydefx.PyStudy()
@@ -112,27 +110,6 @@ def _exec({}):
                     os.unlink( fn )
         pass
     pass
-
-def getResourcesAbleToLaunchJobs():
-    """
-    Regarding list of Resources in the CatalogResources.xml this method returns those able to launch jobs.
-    Ydefx engine delegate to a job encapsulating itself an execution of YACS graph with driver application.
-    Consequently, the resource to evaluate in parallel the function should one of those returned by this method.
-    """
-    import LifeCycleCORBA
-    params = LifeCycleCORBA.ResourceParameters(can_launch_batch_jobs=True)
-    # ask to resource manager to filter among all resources listed in CatalogResources those able to launch job.
-    return salome.rm.GetFittingResources(params)
-
-def getNumberOfCoresForLocalhost():
-    """
-    Return total number of cores for all resources marked as able to run containers ( "canRunContainers" attribute
-    set to true in the CatalogResources.xml ).
-    """
-    import LifeCycleCORBA
-    params = LifeCycleCORBA.ResourceParameters(can_run_containers=True)
-    resources = salome.rm.GetFittingResources(params)
-    return sum( [salome.rm.GetResourceDefinition(res).nb_proc_per_node for res in resources] )
 
 def init(resourceName, resultDirectory = "/tmp"):
     """
@@ -167,10 +144,11 @@ def init(resourceName, resultDirectory = "/tmp"):
     :return: a pydefx.Parameters instance
     """
     myParams = pydefx.Parameters()
-    if resourceName not in getResourcesAbleToLaunchJobs():
-        raise RuntimeError("Resource \"{}\" is not existing or not declared as able to launch job. Available resources are : {}".format(resourceName,str(getResourcesAbleToLaunchJobs())))
+    from pydefx import configuration
+    if resourceName not in configuration.availableResources():
+        raise RuntimeError("Resource \"{}\" is not existing or not declared as able to launch job. Available resources are : {}".format(resourceName,str(configuration.availableResources())))
     myParams.configureResource(resourceName)
     myParams.createResultDirectory(resultDirectory)
     if resourceName == "localhost":
-        myParams.nb_branches = getNumberOfCoresForLocalhost()
+        myParams.nb_branches = configuration.getNumberOfCoresForLocalhost()
     return myParams

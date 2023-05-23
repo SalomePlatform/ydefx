@@ -18,13 +18,12 @@
 //
 #ifndef IDEFX_QuickConfigWidget_HXX
 #define IDEFX_QuickConfigWidget_HXX
-#include "ydefxguiExports.hxx"
 #include "JobParametersProxy.hxx"
 #include <QtWidgets>
 
 namespace ydefx
 {
-class YDEFXGUI_EXPORT QuickConfigWidget: public QScrollArea
+class QuickConfigWidget: public QScrollArea
 {
   Q_OBJECT
 public:

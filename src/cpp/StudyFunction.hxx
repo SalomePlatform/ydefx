@@ -18,13 +18,12 @@
 //
 #ifndef YDEFX_STUDYFUNCTION_H
 #define YDEFX_STUDYFUNCTION_H
-#include "ydefxExports.hxx"
 #include <string>
 #include <list>
 
 namespace ydefx
 {
-class YDEFX_EXPORT StudyFunction
+class StudyFunction
 {
 public:
   virtual ~StudyFunction(){}

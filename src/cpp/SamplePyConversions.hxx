@@ -19,7 +19,6 @@
 #ifndef YDEFX_SAMPLEPYCONVERSIONS_HXX
 #define YDEFX_SAMPLEPYCONVERSIONS_HXX
 
-#include "ydefxExports.hxx"
 #include <py2cpp/py2cpp.hxx>
 #include "Sample.hxx"
 #include "Exceptions.hxx"
@@ -34,7 +33,7 @@ namespace ydefx
  *      list of sample types.
  */
 template <class S, class... Ts>
-YDEFX_EXPORT class SamplePyConverter;
+class SamplePyConverter;
 
 /*!
  * Convert input variables of a sample to a python dictionary.
@@ -42,7 +41,7 @@ YDEFX_EXPORT class SamplePyConverter;
  * The returned value is NULL in case of error.
  */
 template <class ...Ts>
-YDEFX_EXPORT PyObject* inputToPy(const Sample<Ts...>& sample);
+PyObject* inputToPy(const Sample<Ts...>& sample);
 
 /*!
  * Fill the input values of the sample from a python dictionary.
@@ -54,7 +53,7 @@ YDEFX_EXPORT PyObject* inputToPy(const Sample<Ts...>& sample);
  * Keys from the python dictionary that do not exist in the sample are ignored.
  */
 template <class ...Ts>
-YDEFX_EXPORT py2cpp::ConversionCheck inputFromPy(PyObject* obj, Sample<Ts...>& sample);
+py2cpp::ConversionCheck inputFromPy(PyObject* obj, Sample<Ts...>& sample);
 
 /*!
  * Convert output variables of a sample to a python dictionary.
@@ -65,7 +64,7 @@ YDEFX_EXPORT py2cpp::ConversionCheck inputFromPy(PyObject* obj, Sample<Ts...>& s
  * The returned value is NULL in case of error.
  */
 template <class ...Ts>
-YDEFX_EXPORT PyObject* outputToPy(const Sample<Ts...>& sample);
+PyObject* outputToPy(const Sample<Ts...>& sample);
 
 /*!
  * Fill the output values of a sample from a python dictionary.
@@ -76,7 +75,7 @@ YDEFX_EXPORT PyObject* outputToPy(const Sample<Ts...>& sample);
  * ignored.
  */
 template <class ...Ts>
-YDEFX_EXPORT py2cpp::ConversionCheck outputFromPy(PyObject* obj, Sample<Ts...>& sample);
+py2cpp::ConversionCheck outputFromPy(PyObject* obj, Sample<Ts...>& sample);
 
 /*!
  * Fill the error values of a sample from a python list of strings.
@@ -84,7 +83,7 @@ YDEFX_EXPORT py2cpp::ConversionCheck outputFromPy(PyObject* obj, Sample<Ts...>& 
  * strings.
  */
 template <class ...Ts>
-YDEFX_EXPORT py2cpp::ConversionCheck errorsFromPy(PyObject* obj, Sample<Ts...>& sample);
+py2cpp::ConversionCheck errorsFromPy(PyObject* obj, Sample<Ts...>& sample);
 
 /*!
  * Fetch output values and errors from the python objet.
@@ -92,14 +91,14 @@ YDEFX_EXPORT py2cpp::ConversionCheck errorsFromPy(PyObject* obj, Sample<Ts...>& 
  * function is called.
  */
 template <class ...Ts>
-YDEFX_EXPORT py2cpp::ConversionCheck fetchResults(PyObject* obj, Sample<Ts...>& sample);
+py2cpp::ConversionCheck fetchResults(PyObject* obj, Sample<Ts...>& sample);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Template implementations
 ////////////////////////////////////////////////////////////////////////////////
 
 template <class S>
-class YDEFX_EXPORT SamplePyConverter<S>
+class SamplePyConverter<S>
 {
 public:
   bool inputToPy(const S& sample, PyObject* result){return true;}
@@ -111,7 +110,7 @@ public:
 };
 
 template <class S, class T, class... Ts>
-class YDEFX_EXPORT SamplePyConverter<S,T, Ts...> : public SamplePyConverter<S, Ts...>
+class SamplePyConverter<S,T, Ts...> : public SamplePyConverter<S, Ts...>
 {
 public:
   /*! Add sample.inputs<T> to result.
@@ -134,7 +133,7 @@ public:
     return ok;
   }
 
-  YDEFX_EXPORT py2cpp::ConversionCheck inputFromPy(PyObject* obj, S& sample)
+  py2cpp::ConversionCheck inputFromPy(PyObject* obj, S& sample)
   {
     py2cpp::ConversionCheck check;
     std::list<std::string> names = sample.OneTypeSample<T>::inputs().names();
@@ -174,7 +173,7 @@ public:
     return check;
   }
 
-  YDEFX_EXPORT bool outputToPy(const S& sample, PyObject* result)
+  bool outputToPy(const S& sample, PyObject* result)
   {
     bool ok = true;
     std::size_t maxsize = sample.maxSize();
@@ -210,7 +209,7 @@ public:
     return ok;
   }
 
-  YDEFX_EXPORT py2cpp::ConversionCheck outputFromPy(PyObject* obj, S& sample)
+  py2cpp::ConversionCheck outputFromPy(PyObject* obj, S& sample)
   {
     py2cpp::ConversionCheck check;
     std::list<std::string> names = sample.OneTypeSample<T>::outputs().names();
@@ -259,7 +258,7 @@ public:
 };
 
 template <class ...Ts>
-YDEFX_EXPORT PyObject* inputToPy(const Sample<Ts...>& sample)
+PyObject* inputToPy(const Sample<Ts...>& sample)
 {
   PyObject * result = PyDict_New();
   if(result)
@@ -276,7 +275,7 @@ YDEFX_EXPORT PyObject* inputToPy(const Sample<Ts...>& sample)
 }
 
 template <class ...Ts>
-YDEFX_EXPORT py2cpp::ConversionCheck inputFromPy(PyObject* obj, Sample<Ts...>& sample)
+py2cpp::ConversionCheck inputFromPy(PyObject* obj, Sample<Ts...>& sample)
 {
   py2cpp::ConversionCheck check;
   if(PyDict_Check(obj))
@@ -292,7 +291,7 @@ YDEFX_EXPORT py2cpp::ConversionCheck inputFromPy(PyObject* obj, Sample<Ts...>& s
 }
 
 template <class ...Ts>
-YDEFX_EXPORT PyObject* outputToPy(const Sample<Ts...>& sample)
+PyObject* outputToPy(const Sample<Ts...>& sample)
 {
   PyObject * result = PyDict_New();
   if(result)
@@ -308,7 +307,7 @@ YDEFX_EXPORT PyObject* outputToPy(const Sample<Ts...>& sample)
 }
 
 template <class ...Ts>
-YDEFX_EXPORT py2cpp::ConversionCheck outputFromPy(PyObject* obj, Sample<Ts...>& sample)
+py2cpp::ConversionCheck outputFromPy(PyObject* obj, Sample<Ts...>& sample)
 {
   py2cpp::ConversionCheck check;
   if(PyDict_Check(obj))
@@ -323,7 +322,7 @@ YDEFX_EXPORT py2cpp::ConversionCheck outputFromPy(PyObject* obj, Sample<Ts...>& 
 }
 
 template <class ...Ts>
-YDEFX_EXPORT py2cpp::ConversionCheck errorsFromPy(PyObject* obj, Sample<Ts...>& sample)
+py2cpp::ConversionCheck errorsFromPy(PyObject* obj, Sample<Ts...>& sample)
 {
   py2cpp::ConversionCheck check;
   if(PyList_Check(obj))
@@ -348,7 +347,7 @@ YDEFX_EXPORT py2cpp::ConversionCheck errorsFromPy(PyObject* obj, Sample<Ts...>& 
 }
 
 template <class ...Ts>
-YDEFX_EXPORT py2cpp::ConversionCheck fetchResults(const py2cpp::PyPtr& obj, Sample<Ts...>& sample)
+py2cpp::ConversionCheck fetchResults(const py2cpp::PyPtr& obj, Sample<Ts...>& sample)
 {
   py2cpp::ConversionCheck check;
   check.addError(outputFromPy(obj.getAttr("_output").get(), sample));

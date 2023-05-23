@@ -18,13 +18,12 @@
 //
 #ifndef YDEFX_PYSTUDYJOB_HXX
 #define YDEFX_PYSTUDYJOB_HXX
-#include "ydefxExports.hxx"
 #include "Job.hxx"
 #include <py2cpp/PyPtr.hxx>
 
 namespace ydefx
 {
-class YDEFX_EXPORT PyStudyJob : public Job
+class PyStudyJob : public Job
 {
 public:
   PyStudyJob(const std::string& pymodule_name, const std::string& pyclass_name);

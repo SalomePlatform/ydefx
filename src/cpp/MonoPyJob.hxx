@@ -18,13 +18,12 @@
 //
 #ifndef YDEFX_MONOPYJOB_HXX
 #define YDEFX_MONOPYJOB_HXX
-#include "ydefxExports.hxx"
 #include "Job.hxx"
 #include <py2cpp/PyPtr.hxx>
 
 namespace ydefx
 {
-class YDEFX_EXPORT MonoPyJob : public Job
+class MonoPyJob : public Job
 {
 public:
   MonoPyJob();

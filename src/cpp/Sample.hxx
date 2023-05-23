@@ -19,7 +19,6 @@
 #ifndef YDEFX_SAMPLE_H
 #define YDEFX_SAMPLE_H
 
-#include "ydefxExports.hxx"
 #include <vector>
 #include <string>
 #include <list>
@@ -29,7 +28,7 @@ namespace ydefx
 {
 
 template <class T>
-class YDEFX_EXPORT VariablesGroup
+class VariablesGroup
 {
 public:
   VariablesGroup();
@@ -59,10 +58,10 @@ private:
   T _defaultValue;
 };
 
-enum class YDEFX_EXPORT ExecutionState {NOTEXECUTED, DONE, ERROR};
+enum class ExecutionState {NOTEXECUTED, DONE, ERROR};
 
 template <class T>
-class YDEFX_EXPORT OneTypeSample
+class OneTypeSample
 {
 public:
   const VariablesGroup<T>& inputs()const;
@@ -81,7 +80,7 @@ template <class... Ts> class Sample;
 
 // no type sample
 template <>
-class YDEFX_EXPORT Sample<>
+class Sample<>
 {
 public:
   const std::vector<std::string>& errors()const{return _errors;}
@@ -129,7 +128,7 @@ private:
 
 // multi type sample
 template <class T, class... Ts>
-class YDEFX_EXPORT Sample<T, Ts...> : public OneTypeSample<T>, public Sample<Ts...>
+class Sample<T, Ts...> : public OneTypeSample<T>, public Sample<Ts...>
 {
 public:
   virtual ExecutionState pointState(int index);

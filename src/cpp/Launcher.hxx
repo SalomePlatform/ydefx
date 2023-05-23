@@ -19,14 +19,13 @@
 #ifndef YDEFX_LAUNCHER_H
 #define YDEFX_LAUNCHER_H
 
-#include "ydefxExports.hxx"
 #include "TMonoPyJob.hxx"
 #include "TPyStudyJob.hxx"
 
 namespace ydefx
 {
 class Job;
-class YDEFX_EXPORT Launcher
+class Launcher
 {
 public:
   Launcher():_lastError(){}

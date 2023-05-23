@@ -18,13 +18,12 @@
 //
 #ifndef IDEFX_PathsConfigWidget_HXX
 #define IDEFX_PathsConfigWidget_HXX
-#include "ydefxguiExports.hxx"
 #include "JobParametersProxy.hxx"
 #include <QtWidgets>
 
 namespace ydefx
 {
-class YDEFXGUI_EXPORT PathsConfigWidget: public QScrollArea
+class PathsConfigWidget: public QScrollArea
 {
   Q_OBJECT
 public:

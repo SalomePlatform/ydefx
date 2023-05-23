@@ -18,13 +18,12 @@
 //
 #ifndef YDEFX_PYSTUDYFUNCTION_H
 #define YDEFX_PYSTUDYFUNCTION_H
-#include "ydefxExports.hxx"
 #include "StudyFunction.hxx"
 #include "PyConversions.hxx"
 
 namespace ydefx
 {
-class YDEFX_EXPORT PyStudyFunction :  StudyFunction
+class PyStudyFunction :  StudyFunction
 {
 public:
   PyStudyFunction();

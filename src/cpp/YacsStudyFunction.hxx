@@ -18,12 +18,11 @@
 //
 #ifndef YDEFX_YACSSTUDYFUNCTION_H
 #define YDEFX_YACSSTUDYFUNCTION_H
-#include "ydefxExports.hxx"
 #include "StudyFunction.hxx"
 namespace ydefx
 {
 //TODO not implemented!
-class YDEFX_EXPORT YacsStudyFunction :  StudyFunction
+class YacsStudyFunction :  StudyFunction
 {
 public:
   YacsStudyFunction();

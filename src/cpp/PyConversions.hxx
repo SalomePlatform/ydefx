@@ -18,7 +18,6 @@
 //
 #ifndef YDEFX_PYCONVERSIONS_HXX
 #define YDEFX_PYCONVERSIONS_HXX
-#include "ydefxExports.hxx"
 #include <py2cpp/PyPtr.hxx>
 
 namespace ydefx
@@ -28,8 +27,8 @@ class PyStudyFunction;
 }
 namespace py2cpp
 {
-YDEFX_EXPORT PyObject * toPy(const ydefx::JobParametersProxy& jp);
-YDEFX_EXPORT PyObject * toPy(const ydefx::PyStudyFunction& jp);
+PyObject * toPy(const ydefx::JobParametersProxy& jp);
+PyObject * toPy(const ydefx::PyStudyFunction& jp);
 }
 
 #include <py2cpp/py2cpp.hxx>

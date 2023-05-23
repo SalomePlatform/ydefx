@@ -18,12 +18,11 @@
 //
 #ifndef YDEFX_EXCEPTIONS_HXX
 #define YDEFX_EXCEPTIONS_HXX
-#include "ydefxExports.hxx"
 #include <string>
 
 namespace ydefx
 {
-class YDEFX_EXPORT Exception:public std::exception
+class Exception:public std::exception
 {
 public:
   Exception(const std::string& message);

@@ -47,20 +47,33 @@ SET(ydefx_HEADERS
   Launcher.hxx
   PyStudyJob.hxx
   TPyStudyJob.hxx
-  ydefxExports.hxx
 )
 
-SET(ydefx_LINK
-  py2cpp
-  ${PYTHON_LIBRARIES}
-)
+IF(WIN32)
+  SET(ydefx_LINK
+    ${PY2CPP_ROOT_DIR}/lib/py2cpp.lib
+    ${PYTHON_LIBRARIES}
+    ${PLATFORM_LIBS}
+    )
+ELSE(WIN32)
+  SET(ydefx_LINK
+    py2cpp
+    ${PYTHON_LIBRARIES}
+  )
+ENDIF(WIN32)
 
 ADD_LIBRARY(ydefx ${ydefx_SOURCES})
 TARGET_LINK_LIBRARIES(ydefx ${ydefx_LINK})
-TARGET_INCLUDE_DIRECTORIES(ydefx PUBLIC
-                          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/cpp>
-                          $<INSTALL_INTERFACE:${SALOME_INSTALL_HEADERS}>)
-
+IF(WIN32)
+  TARGET_INCLUDE_DIRECTORIES(ydefx PUBLIC
+                             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/cpp>
+                             $<INSTALL_INTERFACE:${SALOME_INSTALL_HEADERS}>
+                             ${PY2CPP_ROOT_DIR}/include)
+ELSE(WIN32)
+  TARGET_INCLUDE_DIRECTORIES(ydefx PUBLIC
+                             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/cpp>
+                             $<INSTALL_INTERFACE:${SALOME_INSTALL_HEADERS}>)
+ENDIF(WIN32)
 INSTALL(TARGETS ydefx DESTINATION ${SALOME_INSTALL_LIBS})
 INSTALL(TARGETS ydefx EXPORT ydefxCfg_cmake LIBRARY DESTINATION ${SALOME_INSTALL_LIBS})
 INSTALL(FILES ${ydefx_HEADERS} DESTINATION ${SALOME_INSTALL_HEADERS}/ydefx)

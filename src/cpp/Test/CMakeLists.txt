@@ -19,15 +19,25 @@
 FIND_PACKAGE(SalomeCppUnit REQUIRED)
 
 # additional include directories
-INCLUDE_DIRECTORIES(
-  ${CPPUNIT_INCLUDE_DIRS}
-  ${CMAKE_CURRENT_SOURCE_DIR}/..
-)
+SET(_include_DIRECTORIES
+    ${CPPUNIT_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/..
+  )
+IF(WIN32)
+  LIST(APPEND _include_DIRECTORIES ${PY2CPP_ROOT_DIR}/include)
+ENDIF(WIN32)
 
+INCLUDE_DIRECTORIES(${_include_DIRECTORIES})
+
+IF(WIN32)
+ SET(py2cpp_lib ${PY2CPP_ROOT_DIR}/lib/py2cpp.lib)
+ELSE(WIN32)
+ SET(py2cpp_lib py2cpp)
+ENDIF(WIN32)
 # libraries to link to
 SET(_link_LIBRARIES
   ${CPPUNIT_LIBRARIES}
-  py2cpp
+  ${py2cpp_lib}
   ydefx
 )
 

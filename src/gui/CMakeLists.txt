@@ -37,7 +37,6 @@ SET(YDEFXGUI_SOURCES
 
 SET(YDEFXGUI_HEADERS
   ResourceWidget.hxx
-  ydefxguiExports.hxx
 )
 
 SET(YDEFXGUI_link_LIBRARIES

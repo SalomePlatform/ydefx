@@ -18,7 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-python3 -m unittest test_insitu.py test_prescript.py test_default.py 
+python3 -m unittest test_insitu.py test_prescript.py test_default.py test_ydefx_base.py
 ret0=$?
 python3 test_mpmcn.py
 ret1=$?

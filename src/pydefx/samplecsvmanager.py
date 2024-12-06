@@ -101,7 +101,7 @@ class SampleManager:
                                                 datapath, str(index))
           raise Exception(extraInfo + str(err))
         sample.addResult(index, output_vals, elt[SampleIterator.ERRORCOLUMN])
-    return None
+    return sample
 
   def restoreSample(self, directory):
     """ The directory should contain the files created by prepareRun. A new

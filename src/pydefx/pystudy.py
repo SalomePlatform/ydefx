@@ -116,7 +116,7 @@ class PyStudy:
       return
     self.job_id = jobid
     launcher = salome_proxy.getLauncher()
-    salome_params = launcher.getJobParameters(job_id)
+    salome_params = launcher.getJobParameters(self.job_id)
     self.params = parameters.Parameters(salome_parameters=salome_params)
     #TODO: sampleManager should be loaded from result_directory
     self.sample=self.sampleManager.restoreSample(salome_params.result_directory)

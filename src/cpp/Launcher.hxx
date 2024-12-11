@@ -96,8 +96,7 @@ Job* Launcher::submitMonoPyJob(const PyStudyFunction& fnScript,
 
   if(!result->launch())
   {
-    _lastError = "Failed to submit job.\n";
-    _lastError  += result->lastError();
+    _lastError  = result->lastError();
     delete result;
     result = nullptr;
   }
@@ -127,7 +126,7 @@ Job* Launcher::submitPyStudyJob(py2cpp::PyPtr& pyStudyObj,
 
   if(!result->lastError().empty())
   {
-    _lastError  = result->lastError();
+    _lastError = result->lastError();
     delete result;
     result = nullptr;
     return result;
@@ -135,8 +134,7 @@ Job* Launcher::submitPyStudyJob(py2cpp::PyPtr& pyStudyObj,
 
   if(!result->launch())
   {
-    _lastError = "Failed to submit job.\n";
-    _lastError  += result->lastError();
+    _lastError  = result->lastError();
     delete result;
     result = nullptr;
   }

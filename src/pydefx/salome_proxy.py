@@ -1,6 +1,8 @@
 import salome
 import pylauncher
 import os
+from SALOME import SALOME_Exception
+from .studyexception import StudyRunException
 
 _use_salome_servers = None
 
@@ -49,13 +51,36 @@ def getResourcesManager():
       _resourceManager = pylauncher.ResourcesManager_cpp(catalog_path)
   return _resourceManager
 
+def format_salome_exception(f):
+  """
+  Get a more readable format of SALOME_Exception.
+  :param f: function that could raise SALOME_Exception.
+  """
+  def wrap_func(*args, **kwargs):
+    try:
+      return f(*args, **kwargs)
+    except SALOME_Exception as ex:
+      raise StudyRunException(ex.args[0].text)
+  return wrap_func
+
+class LauncherWrap:
+  def __init__(self, launcher):
+    self._launcher = launcher
+
+  def __getattr__(self, name):
+    attr = getattr(self._launcher, name)
+    if callable(attr):
+      return format_salome_exception(attr)
+    else:
+      return attr
+
 _launcher = None
 def getLauncher():
   global _launcher
   _default()
   if _launcher is None:
     if _use_salome_servers:
-      _launcher = salome.naming_service.Resolve('/SalomeLauncher')
+      _launcher = LauncherWrap(salome.naming_service.Resolve('/SalomeLauncher'))
     else:
       _launcher = pylauncher.Launcher_cpp()
       _launcher.SetResourcesManager(getResourcesManager())

@@ -16,7 +16,7 @@
 #
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.18)
 PROJECT(ydefx)
 
 SET (CMAKE_CXX_STANDARD 11)

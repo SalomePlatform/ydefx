@@ -257,6 +257,11 @@ For further details, see {}/logs directory on {}.""".format(
       return 0.0
     return self.sample.progressRate()
 
+  def cancel(self):
+    if self.job_id >= 0 :
+      launcher = salome_proxy.getLauncher()
+      launcher.stopJob(self.job_id)
+
   def dump(self):
     if self.job_id < 0 :
       raise StudyUseException("Cannot dump the job if it is not created!")

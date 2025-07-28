@@ -28,6 +28,7 @@ class SampleTest: public CppUnit::TestFixture
   CPPUNIT_TEST(fullStudy);
   CPPUNIT_TEST(genericStudy);
   CPPUNIT_TEST(emptyError);
+  CPPUNIT_TEST(cancelStudy);
   CPPUNIT_TEST_SUITE_END();
 public:
   void setUp();
@@ -36,6 +37,7 @@ public:
   void fullStudy();
   void genericStudy();
   void emptyError();
+  void cancelStudy();
 };
 
 #endif // YDEFX_SAMPLETEST_HXX

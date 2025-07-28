@@ -150,4 +150,21 @@ void PyStudyJob::configureWaitDelay(int seconds)
   _waitDelay = seconds;
 }
 
+bool PyStudyJob::cancel()
+{
+  _lastError = "";
+  try
+  {
+    py2cpp::PyFunction pyFn;
+    pyFn.loadExp(_pyStudy, "cancel");
+    pyFn();
+  }
+  catch(std::exception& e)
+  {
+    _lastError = "An error occured while canceling the job.\n";
+    _lastError += e.what();
+  }
+  return _lastError.empty();
+}
+
 }

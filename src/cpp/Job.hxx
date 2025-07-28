@@ -35,6 +35,7 @@ public:
   virtual const std::string& lastError()=0;
   virtual bool wait()=0; // Wait for the end of the job. Return false when it fails.
   virtual void configureWaitDelay(int seconds)=0;
+  virtual bool cancel()=0; // cancel the job and return false when it fails.
 };
 }
 #endif // YDEFX_JOB_H

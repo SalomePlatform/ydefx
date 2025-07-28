@@ -36,6 +36,7 @@ public:
   virtual const std::string& lastError();
   virtual bool wait(); // Wait for the end of the job. Return false when it fails.
   virtual void configureWaitDelay(int seconds);
+  virtual bool cancel(); // cancel the job and return false when it fails.
 protected:
   py2cpp::PyPtr _pyStudy;
   std::string _lastError;

@@ -214,7 +214,7 @@ void SampleTest::emptyError()
     std::time_t t = std::time(nullptr);
     std::tm tm = *std::localtime(&t);
     std::stringstream ss;
-    ss << jobParams.work_directory() << "/GenericTest"
+    ss << jobParams.work_directory() << "/ErrorTest"
        << std::put_time(&tm, "%m%d%H%M%S");
     jobParams.work_directory(ss.str());
     jobParams.createResultDirectory("/tmp");
@@ -261,6 +261,56 @@ void SampleTest::emptyError()
     delete myJob;
 }
 
+void SampleTest::cancelStudy()
+/// Test cancel on a running study.
+{
+    std::list<std::string> resources = ydefx::JobParametersProxy::AvailableResources();
+    CPPUNIT_ASSERT(resources.size() > 0);
+
+    ydefx::JobParametersProxy jobParams;
+    jobParams.configureResource("localhost");
+    std::time_t t = std::time(nullptr);
+    std::tm tm = *std::localtime(&t);
+    std::stringstream ss;
+    ss << jobParams.work_directory() << "/CancelTest"
+       << std::put_time(&tm, "%m%d%H%M%S");
+    jobParams.work_directory(ss.str());
+    jobParams.createResultDirectory("/tmp");
+    std::string pyScript =
+"import time\n"
+"def _exec(a):\n"
+"  time.sleep(5)\n"
+"  r = a\n"
+"  return r\n";
+
+    ydefx::PyStudyFunction studyFunction;
+    studyFunction.loadString(pyScript);
+    CPPUNIT_ASSERT(studyFunction.isValid());
+    const std::list<std::string>& inputs = studyFunction.inputNames();
+    CPPUNIT_ASSERT(std::find(inputs.begin(), inputs.end(), "a")!=inputs.end());
+    const std::list<std::string>& outputs = studyFunction.outputNames();
+    CPPUNIT_ASSERT(std::find(outputs.begin(), outputs.end(), "r")
+                                                              != outputs.end());
+
+    ydefx::Sample<double, py2cpp::PyPtr > sample;
+    std::vector<double> a_vals = {1.1, 4.4, 9, 4};
+    sample.inputs<double>().set("a", a_vals);
+    sample.outputs<double>().addName("r");
+
+    py2cpp::PyFunction objConstructor;
+    objConstructor.loadExp("pydefx", "PyStudy");
+    py2cpp::PyPtr pyStudy = objConstructor();
+
+    ydefx::Launcher l;
+    ydefx::Job* myJob = l.submitPyStudyJob(pyStudy, studyFunction, sample, jobParams);
+    CPPUNIT_ASSERT(myJob);
+    CPPUNIT_ASSERT(l.lastError().empty());
+    bool ok;
+    ok = myJob->cancel();
+    CPPUNIT_ASSERT(ok);
+    std::string jobState = myJob->state();
+    CPPUNIT_ASSERT(jobState == "FAILED");
+}
 
 CPPUNIT_TEST_SUITE_REGISTRATION( SampleTest );
 #include "PyTestMain.cxx"

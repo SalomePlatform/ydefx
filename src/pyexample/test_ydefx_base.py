@@ -18,7 +18,7 @@
 # See http://www.salome-platform.org/ or email : webmaster.salome@opencascade.com
 #
 
-import salome_utils
+from salome.kernel import salome_utils
 import unittest
 import os
 from pathlib import Path
@@ -41,9 +41,9 @@ class TestYdefxBase(unittest.TestCase):
     salome_utils.logger.info( f"répertoire de travail: {myParams.salome_parameters.work_directory}" )
     salome_utils.logger.info( f"répertoire local de gestion: {myParams.salome_parameters.result_directory}" )
     myScript = pydefx.PyScript()
-    myScript.loadString("""import salome_utils
+    myScript.loadString("""from salome.kernel import salome_utils
 def _exec(x, y):
-  import KernelBasis
+  from salome.kernel import KernelBasis
   cst = 1.28
   salome_utils.logger.info("Je suis une info")
   KernelBasis.HeatMarcel(cst*1.0,1)
@@ -73,7 +73,7 @@ def _exec(x, y):
     self.assertEqual( res.result.getOutput("t"), [ '10.0 / 20.0 = 2.0', '20.0 / 60.0 = 3.0', '30.0 / 120.0 = 4.0', '40.0 / 200.0 = 5.0' ] )
 
 if __name__ == '__main__':
-  import KernelBasis
+  from salome.kernel import KernelBasis
   KernelBasis.SetVerbosityLevel("WARNING")
   salome_utils.positionVerbosityOfLoggerRegardingState()
   unittest.main()

@@ -1,7 +1,7 @@
 from salome.kernel import salome
 from salome.kernel import pylauncher
 import os
-from salome.kernel.SALOME import SALOME_Exception
+from salome.kernel.SALOME_CMOD import SALOME_Exception
 from .studyexception import StudyRunException
 
 _use_salome_servers = None

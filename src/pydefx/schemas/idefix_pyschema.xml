@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='iso-8859-1' ?>
 <proc name="newSchema_1">
+   <property name="executor" value="workloadmanager"/>
    <type name="string" kind="string"/>
    <struct name="Engines/dataref">
       <member name="ref" type="string"/>
@@ -32,6 +33,8 @@
    <container name="container0">
       <property name="container_kind" value="Salome"/>
       <property name="attached_on_cloning" value="0"/>
+      <property name="nb_parallel_procs" value="1"/>
+      <property name="type" value="multi"/>
    </container>
    <optimizer name="OptimizerLoop0" nbranch="4" loopWeight="-1" lib="plugin.py" entry="myalgosync">
       <remote name="Solver" elementaryWeight="-1">

@@ -63,7 +63,7 @@ def newResultDirectory(basedir=None):
 def defaultWckey(resource="localhost"):
   result = ""
   if resource != "localhost":
-    result = "P12H6:SALOME"
+    result = "P12H8:SALOME"
   return result
 
 def availableResources():
